@@ -7,9 +7,9 @@ use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
 
 /**
- * @covers TableEqualityAssertion
+ * @covers \TravisCarden\BehatTableComparison\TableEqualityAssertion
  */
-class TestTableEqualityAssertionTest extends \PHPUnit_Framework_TestCase {
+class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase {
 
   const TABLE_REALISTIC_SORTED = [
     ['id1', 'Label one', 'First value', 'true'],
