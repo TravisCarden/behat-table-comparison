@@ -13,15 +13,9 @@ class FeatureContext implements Context
 
     /**
      * @Given I am :author
-     */
-    public function iAm($author)
-    {
-    }
-
-    /**
      * @Given I am writing :work
      */
-    public function iAmWriting($work)
+    public function doNothing($author)
     {
     }
 
