@@ -98,6 +98,27 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase {
     ];
   }
 
+  public function testSettersPairs() {
+    // Default values.
+    $assertion = (new TableEqualityAssertion($this->arbitraryLeft, $this->arbitraryRight));
+    $this->assertTrue($assertion->isRowOrderRespected());
+    $this->assertEmpty($assertion->getExpectedHeader());
+
+    // Set values.
+    $assertion
+      ->ignoreRowOrder()
+      ->expectHeader([1, 2, 3]);
+    $this->assertFalse($assertion->isRowOrderRespected());
+    $this->assertEquals([1, 2, 3], $assertion->getExpectedHeader());
+
+    // Unset values.
+    $assertion
+      ->respectRowOrder()
+      ->expectNoHeader();
+    $this->assertTrue($assertion->isRowOrderRespected());
+    $this->assertEmpty($assertion->getExpectedHeader());
+  }
+
   /**
    * Tests assertion with identical tables.
    *
