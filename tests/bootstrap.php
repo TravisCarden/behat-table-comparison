@@ -1,12 +1,15 @@
 <?php
 
+namespace TravisCarden\Tests;
+
 require __DIR__ . '/../vendor/autoload.php';
 
 // PHP assertion handling.
-if (!class_exists('\AssertionError')) {
-  class AssertionError extends \Exception {}
+class AssertionError extends \Exception
+{
 }
-assert_options(ASSERT_ACTIVE, TRUE);
+
+assert_options(ASSERT_ACTIVE, true);
 assert_options(ASSERT_CALLBACK, function ($file, $line, $code, $message) {
-  throw new \AssertionError($message);
+    throw new AssertionError($message);
 });
