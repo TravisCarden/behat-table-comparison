@@ -15,7 +15,9 @@ cache:
 install:
   - composer install --prefer-dist --no-interaction --dev
 
-script: vendor/bin/phpunit
+script:
+  - vendor/bin/phpunit
+  - vendor/bin/behat -fprogress --strict
 
 matrix:
   fast_finish: true
