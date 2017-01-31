@@ -1,0 +1,8 @@
+#!/bin/sh
+#
+# A Git pre-commit hook script to enforce standards on committed code. To enable, symlink this file into ".git/hooks".
+
+ROOT_DIR="$(git rev-parse --show-toplevel)"
+
+# Run PHP_CodeSniffer.
+${ROOT_DIR}"/vendor/bin/phpcs"
