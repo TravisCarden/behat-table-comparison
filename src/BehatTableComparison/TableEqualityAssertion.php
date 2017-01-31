@@ -212,12 +212,10 @@ class TableEqualityAssertion
         $expected_body = $this->getExpectedBody();
         $actual_body = $this->getActual();
 
-        if ($this->isRowOrderRespected()) {
-            throw new \LogicException('Equality assertion respecting row order has not yet been implemented in this library. Use ignoreRowOrder() to ignore row order.');
+        if (!$this->isRowOrderRespected()) {
+            $expected_body = $this->sortTable($expected_body);
+            $actual_body = $this->sortTable($actual_body);
         }
-
-        $expected_body = $this->sortTable($expected_body);
-        $actual_body = $this->sortTable($actual_body);
 
         if ($expected_body != $actual_body) {
             $message = $this->generateMessage($expected_body->getRows(), $actual_body->getRows());

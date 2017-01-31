@@ -32,8 +32,6 @@ class FeatureContext implements Context
                     ['The Return of the King'],
                 ]);
                 (new TableEqualityAssertion($expected, $actual))
-                    // @todo Respect row order once implemented.
-                    ->ignoreRowOrder()
                     ->setMissingRowsLabel('Missing books')
                     ->setUnexpectedRowsLabel('Unexpected books')
                     ->assert();

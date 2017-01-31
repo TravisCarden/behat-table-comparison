@@ -58,8 +58,7 @@ See [`features/bootstrap/FeatureContext.php`](features/bootstrap/FeatureContext.
 
 ## Limitations & Known Issues
 
-* The library does not yet support table comparisons that respect (i.e., require identical) row order, because it has not yet been decided what the error output should look like. Suggestions are welcome in the issue queue.
-* Duplicate rows currently fail equality assertion but do not yet show a helpful message.
+Some inequality detection currently works but does not yet display a helpful error message, because it has not been decided what it should show. Please help me [specify error messages for complex differences](https://github.com/TravisCarden/behat-table-comparison/issues/1).
 
 ## Contribution
 

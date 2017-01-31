@@ -139,8 +139,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
         $right = new TableNode($right);
 
         $actual = (new TableEqualityAssertion($left, $right))
-            // @todo Respect row order once implemented.
-            ->ignoreRowOrder()
             ->assert();
 
         $this->assertTrue($actual);
@@ -171,8 +169,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
 
         try {
             (new TableEqualityAssertion($left, $right))
-                // @todo Respect row order once implemented.
-                ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
             $expected = implode($expected, PHP_EOL);
@@ -253,8 +249,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
 
         try {
             $assertion
-                // @todo Respect row order once implemented.
-                ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
             $this->assertStringStartsWith("${prefix} ${label}", $e->getMessage());
@@ -292,8 +286,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
 
         $actual = (new TableEqualityAssertion($left, $right))
             ->expectHeader($header)
-            // @todo Respect row order once implemented.
-            ->ignoreRowOrder()
             ->assert();
 
         $this->assertTrue($actual);
@@ -343,11 +335,25 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
     /**
      * Tests assertion respecting row order.
      *
-     * @expectedException \LogicException
+     * @dataProvider providerTestAssertionRespectingRowOrder
+     * @expectedException \TravisCarden\BehatTableComparison\UnequalTablesException
+     *
+     * @todo Decide on the desired error message for tables that differ in row order only.
      */
-    public function testAssertionRespectingRowOrder()
+    public function testAssertionRespectingRowOrder($left, $right)
     {
-        (new TableEqualityAssertion($this->arbitraryLeft, $this->arbitraryRight))
+        $left = new TableNode($left);
+        $right = new TableNode($right);
+
+        (new TableEqualityAssertion($left, $right))
             ->assert();
+    }
+
+    public function providerTestAssertionRespectingRowOrder()
+    {
+        return [
+            [self::TABLE_SIMPLE_SORTED, self::TABLE_SIMPLE_UNSORTED],
+            [self::TABLE_REALISTIC_SORTED, self::TABLE_REALISTIC_UNSORTED],
+        ];
     }
 }
