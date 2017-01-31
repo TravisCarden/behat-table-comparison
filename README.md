@@ -20,6 +20,7 @@ Then use the [`TableEqualityAssertion`](src/BehatTableComparison/TableEqualityAs
 <?php
 
 use Behat\Behat\Context\Context;
+use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 
@@ -27,25 +28,36 @@ class FeatureContext implements Context
 {
 
     /**
-     * @Then some table should equal the following
+     * @Given I am :author
      */
-    public function someTableShouldEqualTheFollowing(TableNode $expected)
+    public function doNothing($author)
     {
-        // Build a table of actual data from your application.
-        $fake_data = [
-            ['id2', 'Label Two'],
-            ['id4', 'Label Four'],
-        ];
-        $actual = new TableNode($fake_data);
-
-        // Assert equality between the actual table and the expected table.
-        (new TableEqualityAssertion($expected, $actual))
-            ->expectHeader(['id', 'label'])
-            ->ignoreRowOrder()
-            ->assert();
     }
 
+    /**
+     * @Then I should include the following :items in :group
+     */
+    public function iShouldIncludeTheFollowingIn($items, $group, TableNode $expected)
+    {
+        switch ($group) {
+            case 'The Lord of the Rings series':
+                $actual = new TableNode([
+                    ['The Hobbit'],
+                    ['The Fellowship of the Ring'],
+                    ['The Two Towers'],
+                ]);
+                (new TableEqualityAssertion($expected, $actual))
+                    ->setMissingRowsLabel('Missing books')
+                    ->setUnexpectedRowsLabel('Unexpected books')
+                    ->assert();
+                break;
+
+            default:
+                throw new PendingException();
+        }
+    }
 }
+
 ```
 
 Output is like the following:
