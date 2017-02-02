@@ -59,7 +59,7 @@ class FeatureContext implements Context
 
 Output is like the following:
 
-![Example Output](misc/example-output.gif)
+![Example Output](resources/example-output.gif)
 
 ## Examples
 
