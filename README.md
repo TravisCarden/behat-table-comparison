@@ -20,7 +20,6 @@ Then use the [`TableEqualityAssertion`](src/BehatTableComparison/TableEqualityAs
 <?php
 
 use Behat\Behat\Context\Context;
-use Behat\Behat\Tester\Exception\PendingException;
 use Behat\Gherkin\Node\TableNode;
 use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 
@@ -28,36 +27,34 @@ class FeatureContext implements Context
 {
 
     /**
-     * @Given I am :author
+     * @Then I should include the following characters in the Company of the Ring
      */
-    public function doNothing($author)
+    public function iShouldIncludeTheFollowingCharactersInTheCompanyOfTheRing(TableNode $expected)
     {
+        // Get the data from the application and create a table from it.
+        $application_data = [
+            ['Frodo Baggins', 'Hobbit'],
+            ['Samwise "Sam" Gamgee', 'Hobbit'],
+            ['Saruman the White', 'Wizard'],
+            ['Legolas', 'Elf'],
+            ['Gimli', 'Dwarf'],
+            ['Aragorn (Strider)', 'Man'],
+            ['Boromir', 'Man'],
+            ['Meriadoc "Merry" Brandybuck', 'Hobbit'],
+            ['Peregrin "Pippin" Took', 'Hobbit'],
+        ];
+        $actual = new TableNode($application_data);
+
+        // Build and execute assertion.
+        (new TableEqualityAssertion($expected, $actual))
+            ->expectHeader(['name', 'race'])
+            ->ignoreRowOrder()
+            ->setMissingRowsLabel('Missing characters')
+            ->setUnexpectedRowsLabel('Unexpected characters')
+            ->assert();
     }
 
-    /**
-     * @Then I should include the following :items in :group
-     */
-    public function iShouldIncludeTheFollowingIn($items, $group, TableNode $expected)
-    {
-        switch ($group) {
-            case 'The Lord of the Rings series':
-                $actual = new TableNode([
-                    ['The Hobbit'],
-                    ['The Fellowship of the Ring'],
-                    ['The Two Towers'],
-                ]);
-                (new TableEqualityAssertion($expected, $actual))
-                    ->setMissingRowsLabel('Missing books')
-                    ->setUnexpectedRowsLabel('Unexpected books')
-                    ->assert();
-                break;
-
-            default:
-                throw new PendingException();
-        }
-    }
 }
-
 ```
 
 Output is like the following:
