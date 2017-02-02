@@ -24,4 +24,3 @@ Feature: Behat Table Comparison Examples
       | Boromir                     | Man    |
       | Meriadoc "Merry" Brandybuck | Hobbit |
       | Peregrin "Pippin" Took      | Hobbit |
-
