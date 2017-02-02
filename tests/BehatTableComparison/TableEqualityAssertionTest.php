@@ -232,6 +232,45 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                     '| id4 | Label four  |',
                 ],
             ],
+            // @todo Design actual error output for the following.
+            // @see https://github.com/TravisCarden/behat-table-comparison/issues/1
+            'Different row order' => [
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                ],
+                [
+                    ['id2', 'Label two'],
+                    ['id1', 'Label one'],
+                ],
+                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
+            ],
+            'Duplicate rows on right' => [
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                ],
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                ],
+                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
+            ],
+            'Duplicate rows on left' => [
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                ],
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                ],
+                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
+            ],
         ];
     }
 

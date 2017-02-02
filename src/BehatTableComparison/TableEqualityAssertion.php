@@ -14,6 +14,8 @@ class TableEqualityAssertion
 
     const DEFAULT_UNEXPECTED_ROWS_LABEL = 'Unexpected rows';
 
+    const UNSPECIFIED_DIFFERENCE_NOTICE = 'Notice: Detected differences that cannot yet be displayed. See https://github.com/TravisCarden/behat-table-comparison/issues/1.';
+
     /**
      * @var \Behat\Gherkin\Node\TableNode
      */
@@ -219,6 +221,11 @@ class TableEqualityAssertion
 
         if ($expected_body != $actual_body) {
             $message = $this->generateMessage($expected_body->getRows(), $actual_body->getRows());
+
+            if (!$message) {
+                $message = self::UNSPECIFIED_DIFFERENCE_NOTICE;
+            }
+
             throw new UnequalTablesException($message);
         }
     }
