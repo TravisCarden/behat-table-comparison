@@ -223,7 +223,11 @@ class TableEqualityAssertion
             $message = $this->generateMessage($expected_body->getRows(), $actual_body->getRows());
 
             if (!$message) {
-                $message = self::UNSPECIFIED_DIFFERENCE_NOTICE;
+                $message = implode(PHP_EOL, [
+                    self::UNSPECIFIED_DIFFERENCE_NOTICE,
+                    '*** Given',
+                    $actual_body->getTableAsString(),
+                ]);
             }
 
             throw new UnequalTablesException($message);

@@ -232,8 +232,35 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                     '| id4 | Label four  |',
                 ],
             ],
-            // @todo Design actual error output for the following.
-            // @see https://github.com/TravisCarden/behat-table-comparison/issues/1
+        ];
+    }
+
+    /**
+     * Tests assertion with table that are unequal in ways that do not yet have error messages specified.
+     *
+     * @todo Specify these scenarios.
+     * @see https://github.com/TravisCarden/behat-table-comparison/issues/1
+     *
+     * @dataProvider providerTestAssertionWithUnspecifiedInequalities
+     * @expectedException \TravisCarden\BehatTableComparison\UnequalTablesException
+     */
+    public function testAssertionWithUnspecifiedInequalities($left, $right)
+    {
+        $left = new TableNode($left);
+        $right = new TableNode($right);
+
+        try {
+            (new TableEqualityAssertion($left, $right))
+                ->assert();
+        } catch (UnequalTablesException $e) {
+            $this->assertUnspecifiedErrorException($e, $right);
+            throw $e;
+        }
+    }
+
+    public function providerTestAssertionWithUnspecifiedInequalities()
+    {
+        return [
             'Different row order' => [
                 [
                     ['id1', 'Label one'],
@@ -243,7 +270,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                     ['id2', 'Label two'],
                     ['id1', 'Label one'],
                 ],
-                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
             ],
             'Duplicate rows on right' => [
                 [
@@ -256,7 +282,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                     ['id2', 'Label two'],
                     ['id2', 'Label two'],
                 ],
-                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
             ],
             'Duplicate rows on left' => [
                 [
@@ -269,7 +294,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                     ['id1', 'Label one'],
                     ['id2', 'Label two'],
                 ],
-                [TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE],
             ],
         ];
     }
@@ -384,8 +408,13 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
         $left = new TableNode($left);
         $right = new TableNode($right);
 
-        (new TableEqualityAssertion($left, $right))
-            ->assert();
+        try {
+            (new TableEqualityAssertion($left, $right))
+                ->assert();
+        } catch (UnequalTablesException $e) {
+            $this->assertUnspecifiedErrorException($e, $right);
+            throw $e;
+        }
     }
 
     public function providerTestAssertionRespectingRowOrder()
@@ -394,5 +423,19 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
             [self::TABLE_SIMPLE_SORTED, self::TABLE_SIMPLE_UNSORTED],
             [self::TABLE_REALISTIC_SORTED, self::TABLE_REALISTIC_UNSORTED],
         ];
+    }
+
+    /**
+     * @param \Exception $e
+     * @param TableNode $right
+     */
+    protected function assertUnspecifiedErrorException(\Exception $e, TableNode $right)
+    {
+        $message = implode(PHP_EOL, [
+            TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE,
+            '*** Given',
+            $right->getTableAsString(),
+        ]);
+        $this->assertSame($message, $e->getMessage());
     }
 }
