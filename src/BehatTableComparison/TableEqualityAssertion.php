@@ -3,6 +3,7 @@
 namespace TravisCarden\BehatTableComparison;
 
 use Behat\Gherkin\Node\TableNode;
+use SebastianBergmann\Diff\Differ;
 
 /**
  * Asserts equality between two TableNodes.
@@ -182,9 +183,6 @@ class TableEqualityAssertion
         return true;
     }
 
-    /**
-     * Asserts header expectations.
-     */
     protected function assertHeader()
     {
         $expected_header = $this->getExpectedHeader();
@@ -206,21 +204,42 @@ class TableEqualityAssertion
         throw new \LogicException(implode(PHP_EOL, $message));
     }
 
-    /**
-     * Asserts body expectations.
-     */
     protected function assertBody()
     {
-        $expected_body = $this->getExpectedBody();
-        $actual_body = $this->getActual();
-
-        if (!$this->isRowOrderRespected()) {
-            $expected_body = $this->sortTable($expected_body);
-            $actual_body = $this->sortTable($actual_body);
+        if ($this->isRowOrderRespected()) {
+            $this->assertBodyRespectingRowOrder();
+        } else {
+            $this->assertBodyIgnoringRowOrder();
         }
+    }
+
+    protected function assertBodyRespectingRowOrder()
+    {
+        $expected_body_rows = $this->getExpectedBody()->getRows();
+        $actual_body_rows = $this->getActual()->getRows();
+
+        // Normalize column widgets between expected and actual tables.
+        $combined_table = (new TableNode(array_merge($expected_body_rows, $actual_body_rows)))
+            ->getTableAsString();
+        $combined_table_rows = explode(PHP_EOL, $combined_table);
+
+        $expected_body = implode(PHP_EOL, array_slice($combined_table_rows, 0, count($expected_body_rows)));
+        $actual_body = implode(PHP_EOL, array_slice($combined_table_rows, count($expected_body_rows)));
 
         if ($expected_body != $actual_body) {
-            $message = $this->generateMessage($expected_body->getRows(), $actual_body->getRows());
+            $diff = (new Differ("--- Expected\n+++ Actual\n"))
+                ->diff($expected_body, $actual_body);
+            throw new UnequalTablesException($diff);
+        }
+    }
+
+    protected function assertBodyIgnoringRowOrder()
+    {
+        $expected_body = $this->sortTable($this->getExpectedBody());
+        $actual_body = $this->sortTable($this->getActual());
+
+        if ($expected_body != $actual_body) {
+            $message = $this->generateMessageForPostSortDifferences($expected_body->getRows(), $actual_body->getRows());
 
             if (!$message) {
                 $message = implode(PHP_EOL, [
@@ -264,7 +283,7 @@ class TableEqualityAssertion
      *
      * @return string
      */
-    protected function generateMessage(array $expected_rows, array $actual_rows)
+    protected function generateMessageForPostSortDifferences(array $expected_rows, array $actual_rows)
     {
         $message = [];
         $this->addArrayDiffMessageLines($message, $actual_rows, $expected_rows, '--- ' . $this->getMissingRowsLabel());

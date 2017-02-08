@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "91b147e232c2a252de48283a44170aa8",
+    "content-hash": "269a3f62d1817f1686024c23d922a3a8",
     "packages": [
         {
             "name": "behat/gherkin",
@@ -64,6 +64,58 @@
                 "parser"
             ],
             "time": "2016-10-30T11:50:56+00:00"
+        },
+        {
+            "name": "sebastian/diff",
+            "version": "1.4.1",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/sebastianbergmann/diff.git",
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
+                "shasum": ""
+            },
+            "require": {
+                "php": ">=5.3.3"
+            },
+            "require-dev": {
+                "phpunit/phpunit": "~4.8"
+            },
+            "type": "library",
+            "extra": {
+                "branch-alias": {
+                    "dev-master": "1.4-dev"
+                }
+            },
+            "autoload": {
+                "classmap": [
+                    "src/"
+                ]
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "BSD-3-Clause"
+            ],
+            "authors": [
+                {
+                    "name": "Kore Nordmann",
+                    "email": "mail@kore-nordmann.de"
+                },
+                {
+                    "name": "Sebastian Bergmann",
+                    "email": "sebastian@phpunit.de"
+                }
+            ],
+            "description": "Diff implementation",
+            "homepage": "https://github.com/sebastianbergmann/diff",
+            "keywords": [
+                "diff"
+            ],
+            "time": "2015-12-08T07:14:41+00:00"
         }
     ],
     "packages-dev": [
@@ -1285,58 +1337,6 @@
                 "equality"
             ],
             "time": "2016-11-19T09:18:40+00:00"
-        },
-        {
-            "name": "sebastian/diff",
-            "version": "1.4.1",
-            "source": {
-                "type": "git",
-                "url": "https://github.com/sebastianbergmann/diff.git",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e"
-            },
-            "dist": {
-                "type": "zip",
-                "url": "https://api.github.com/repos/sebastianbergmann/diff/zipball/13edfd8706462032c2f52b4b862974dd46b71c9e",
-                "reference": "13edfd8706462032c2f52b4b862974dd46b71c9e",
-                "shasum": ""
-            },
-            "require": {
-                "php": ">=5.3.3"
-            },
-            "require-dev": {
-                "phpunit/phpunit": "~4.8"
-            },
-            "type": "library",
-            "extra": {
-                "branch-alias": {
-                    "dev-master": "1.4-dev"
-                }
-            },
-            "autoload": {
-                "classmap": [
-                    "src/"
-                ]
-            },
-            "notification-url": "https://packagist.org/downloads/",
-            "license": [
-                "BSD-3-Clause"
-            ],
-            "authors": [
-                {
-                    "name": "Kore Nordmann",
-                    "email": "mail@kore-nordmann.de"
-                },
-                {
-                    "name": "Sebastian Bergmann",
-                    "email": "sebastian@phpunit.de"
-                }
-            ],
-            "description": "Diff implementation",
-            "homepage": "https://github.com/sebastianbergmann/diff",
-            "keywords": [
-                "diff"
-            ],
-            "time": "2015-12-08T07:14:41+00:00"
         },
         {
             "name": "sebastian/environment",

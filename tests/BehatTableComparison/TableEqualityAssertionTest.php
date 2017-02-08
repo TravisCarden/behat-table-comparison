@@ -169,6 +169,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
 
         try {
             (new TableEqualityAssertion($left, $right))
+                ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
             $expected = implode($expected, PHP_EOL);
@@ -251,6 +252,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
 
         try {
             (new TableEqualityAssertion($left, $right))
+                ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
             $this->assertUnspecifiedErrorException($e, $right);
@@ -261,16 +263,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
     public function providerTestAssertionWithUnspecifiedInequalities()
     {
         return [
-            'Different row order' => [
-                [
-                    ['id1', 'Label one'],
-                    ['id2', 'Label two'],
-                ],
-                [
-                    ['id2', 'Label two'],
-                    ['id1', 'Label one'],
-                ],
-            ],
             'Duplicate rows on right' => [
                 [
                     ['id1', 'Label one'],
@@ -306,13 +298,12 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
      */
     public function testAssertionWithCustomLabels($method, $tables, $label, $prefix)
     {
-        $assertion = new TableEqualityAssertion(...$tables);
+        $assertion = (new TableEqualityAssertion(...$tables))->ignoreRowOrder();
         /** @var TableEqualityAssertion $assertion */
         $assertion = call_user_func_array([$assertion, $method], [$label]);
 
         try {
-            $assertion
-                ->assert();
+            $assertion->assert();
         } catch (UnequalTablesException $e) {
             $this->assertStringStartsWith("${prefix} ${label}", $e->getMessage());
             throw $e;
@@ -396,33 +387,66 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests assertion respecting row order.
+     * Tests assertion with complex differences.
      *
-     * @dataProvider providerTestAssertionRespectingRowOrder
      * @expectedException \TravisCarden\BehatTableComparison\UnequalTablesException
-     *
-     * @todo Decide on the desired error message for tables that differ in row order only.
      */
-    public function testAssertionRespectingRowOrder($left, $right)
+    public function testAssertionWithComplexDifferences()
     {
-        $left = new TableNode($left);
-        $right = new TableNode($right);
+        $left = new TableNode([
+            [1, 'one'],
+            [2, 'two'],
+            [3, 'three'],
+            [4, 'four'],
+            [5, 'five'],
+            [6, 'six'],
+            [7, 'seven'],
+            [8, 'eight'],
+            [9, 'nine'],
+            [10, 'ten'],
+        ]);
+        $right = new TableNode([
+            [1, 'one'],
+            [2, 'two'],
+            [2, 'two'], // Duplicate row.
+            [3, 'three'],
+            [4, 'four'],
+            // Missing row.
+            [6, 'six'],
+            [7, 'seven'],
+            [8, 'changed'], // Changed row.
+            [9, 'nine'],
+            [10, 'ten'],
+            [13, 'thirteen'], // Unexpected row.
+        ]);
 
         try {
             (new TableEqualityAssertion($left, $right))
                 ->assert();
         } catch (UnequalTablesException $e) {
-            $this->assertUnspecifiedErrorException($e, $right);
+            $expected = implode(PHP_EOL, [
+                '--- Expected',
+                '+++ Actual',
+                '@@ @@',
+                ' | 1  | one      |',
+                ' | 2  | two      |',
+                '+| 2  | two      |',
+                ' | 3  | three    |',
+                ' | 4  | four     |',
+                '-| 5  | five     |',
+                ' | 6  | six      |',
+                ' | 7  | seven    |',
+                '-| 8  | eight    |',
+                '+| 8  | changed  |',
+                ' | 9  | nine     |',
+                ' | 10 | ten      |',
+                '+| 13 | thirteen |',
+                '',
+            ]);
+            $this->assertSame($expected, $e->getMessage());
+
             throw $e;
         }
-    }
-
-    public function providerTestAssertionRespectingRowOrder()
-    {
-        return [
-            [self::TABLE_SIMPLE_SORTED, self::TABLE_SIMPLE_UNSORTED],
-            [self::TABLE_REALISTIC_SORTED, self::TABLE_REALISTIC_UNSORTED],
-        ];
     }
 
     /**
