@@ -10,6 +10,8 @@ engines:
   phpmd:
     enabled: true
     checks:
+      CleanCode/ElseExpression:
+        enabled: false
       Controversial/CamelCaseParameterName:
         enabled: false
       Controversial/CamelCaseVariableName:

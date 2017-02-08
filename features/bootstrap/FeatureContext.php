@@ -15,14 +15,14 @@ class FeatureContext implements Context
      * @Given I am :author
      * @Given I am writing :work
      */
-    public function doNothing($author)
+    public function doNothing()
     {
     }
 
     /**
      * @Then I should include the following :items in :group
      */
-    public function iShouldIncludeTheFollowingIn($items, $group, TableNode $expected)
+    public function iShouldIncludeTheFollowingIn($group, TableNode $expected)
     {
         switch ($group) {
             case 'The Lord of the Rings series':
