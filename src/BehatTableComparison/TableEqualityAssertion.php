@@ -186,7 +186,7 @@ class TableEqualityAssertion
     protected function assertHeader()
     {
         $expected_header = $this->getExpectedHeader();
-        if (!$expected_header) {
+        if (empty($expected_header)) {
             return;
         }
 
@@ -302,7 +302,7 @@ class TableEqualityAssertion
         $differences = array_filter($right, function (array $row) use ($left) {
             return !in_array($row, $left);
         });
-        if ($differences) {
+        if (!empty($differences)) {
             $message[] = $label;
             $message[] = (new TableNode($differences))->getTableAsString();
         }
