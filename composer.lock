@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#composer-lock-the-lock-file",
         "This file is @generated automatically"
     ],
-    "content-hash": "269a3f62d1817f1686024c23d922a3a8",
+    "content-hash": "ab4c387008d8943baa0f1512d9cb0ed2",
     "packages": [
         {
             "name": "behat/gherkin",
@@ -2360,7 +2360,7 @@
     "prefer-stable": false,
     "prefer-lowest": false,
     "platform": {
-        "php": "^5.6"
+        "php": "^5.6|^7.0"
     },
     "platform-dev": []
 }

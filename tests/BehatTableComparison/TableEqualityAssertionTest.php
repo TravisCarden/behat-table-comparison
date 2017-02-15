@@ -62,30 +62,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests object constructions with invalid arguments.
-     *
-     * @dataProvider providerTestConstructionWithInvalidArguments
-     * @expectedException \PHPUnit_Framework_Error
-     */
-    public function testConstructionWithInvalidArguments($arguments)
-    {
-        new TableEqualityAssertion(...$arguments);
-    }
-
-    public function providerTestConstructionWithInvalidArguments()
-    {
-        $valid = new TableNode([]);
-        $invalid = '';
-        return [
-            [[]],
-            [[$invalid]],
-            [[$valid]],
-            [[$invalid, $valid]],
-            [[$valid, $invalid]],
-        ];
-    }
-
-    /**
      * Tests setter methods with invalid arguments.
      *
      * @dataProvider providerTestSettersWithInvalidArguments
@@ -102,7 +78,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
         return [
             ['setMissingRowsLabel', [false], [AssertionError::class, 'Missing rows label must be a string.']],
             ['setUnexpectedRowsLabel', [false], [AssertionError::class, 'Unexpected rows label must be a string.']],
-            ['expectHeader', [false], [\PHPUnit_Framework_Error::class]]
         ];
     }
 
