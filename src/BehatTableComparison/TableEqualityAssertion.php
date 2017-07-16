@@ -218,7 +218,7 @@ class TableEqualityAssertion
         $expected_body_rows = $this->getExpectedBody()->getRows();
         $actual_body_rows = $this->getActual()->getRows();
 
-        // Normalize column widgets between expected and actual tables.
+        // Normalize column widths between expected and actual tables.
         $combined_table = (new TableNode(array_merge($expected_body_rows, $actual_body_rows)))
             ->getTableAsString();
         $combined_table_rows = explode(PHP_EOL, $combined_table);
