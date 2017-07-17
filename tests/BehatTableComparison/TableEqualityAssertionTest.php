@@ -212,7 +212,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
     }
 
     /**
-     * Tests assertion with table that are unequal in ways that do not yet have error messages specified.
+     * Tests assertion with tables that are unequal in ways that do not yet have error messages specified.
      *
      * @todo Specify these scenarios.
      * @see https://github.com/TravisCarden/behat-table-comparison/issues/1
