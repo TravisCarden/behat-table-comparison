@@ -72,4 +72,4 @@ Some inequality detection currently works but does not yet display a helpful err
 
 ## Contribution
 
-All contributions are welcome according to [normal GitHub practice](https://guides.github.com/activities/contributing-to-open-source/#contributing).
+All contributions are welcome according to [normal open source practice](https://opensource.guide/how-to-contribute/#how-to-submit-a-contribution).
