@@ -11,7 +11,7 @@
         }
     ],
     "require": {
-        "php" : "^5.6|^7.0",
+        "php": "^5.6|^7.0",
         "behat/gherkin": "^4.4.4",
         "sebastian/diff": "^1.4"
     },
@@ -25,6 +25,9 @@
         "psr-4": {
             "TravisCarden\\BehatTableComparison\\": "src/BehatTableComparison/"
         }
+    },
+    "config": {
+        "sort-packages": true
     },
     "scripts": {
         "post-install-cmd": [
