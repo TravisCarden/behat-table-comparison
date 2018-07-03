@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "ab4c387008d8943baa0f1512d9cb0ed2",
+    "content-hash": "0314ffdc7b599a13a8eb4e88617e5a0c",
     "packages": [
         {
             "name": "behat/gherkin",
@@ -1272,6 +1272,7 @@
                 "github",
                 "test"
             ],
+            "abandoned": "php-coveralls/php-coveralls",
             "time": "2016-01-20T17:35:46+00:00"
         },
         {
