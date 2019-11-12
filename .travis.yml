@@ -1,28 +1,33 @@
+---
 language: php
 
-php: [5.6, 7.0, 7.1, 7.2, 7.3]
+os: linux
 
-sudo: false
+version: ~> 1.0
 
-git:
-  depth: 1
+php: [7.1, 7.2, 7.3]
 
 cache:
   directories:
     - $HOME/.composer/cache
 
-install:
-  - composer install --prefer-dist --no-interaction --dev
+branches:
+  only:
+    - master
+    - develop
+    - wip
+
+jobs:
+  fast_finish: true
+
+install: composer install
 
 script:
   - vendor/bin/phpunit
   - vendor/bin/behat -fprogress --strict
 
-matrix:
-  fast_finish: true
-
 after_success:
-  - vendor/bin/test-reporter
+  - ./vendor/bin/test-reporter
 
 addons:
   code_climate:
