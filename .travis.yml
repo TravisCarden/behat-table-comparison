@@ -23,6 +23,7 @@ jobs:
 install: composer install
 
 script:
+  - vendor/bin/phpcs
   - vendor/bin/phpunit
   - vendor/bin/behat -fprogress --strict
 
