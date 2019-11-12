@@ -17,7 +17,6 @@
     },
     "require-dev": {
         "behat/behat": "^3.3",
-        "codeclimate/php-test-reporter": "^0.4.2",
         "php-coveralls/php-coveralls": "^2.1",
         "phpunit/phpunit": "^5.7",
         "squizlabs/php_codesniffer": "^2.7"

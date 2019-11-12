@@ -27,10 +27,4 @@ script:
   - vendor/bin/behat -fprogress --strict
 
 after_success:
-  - ./vendor/bin/test-reporter
-  - travis_retry ./vendor/bin/coveralls
-
-addons:
-  code_climate:
-    repo_token:
-      secure: "aPCmWXo+sKqQPQ6GT9qmYj82r5ToZ3MBUBE8mXzM7PkRG/5CC1evtCpv3z5ZSO+VcIZwGb9zWuupV+phtsMFblc+tVMSfJj5vzh5IvFISUTa2VSOX7MBaEKRLr7pT/aewXJLHF9yhdSGn7k30+GLjABnEOEr2m9iIxCoNznni6Zy9dxeyZPHzIvmduRGPdLUwnpr++qOVVrHcfkiqjV8CwXo9M6HPTub1MUqYy71/TCxNwqjXI2tgH1g2HV22rPDCOECKGmtn6kCsOdsI9BtcD70UstLs+yHhgxFNdyJNVrn5Fx5/S4WHRpwRCYP89y/QhwO5SdZwPIHeEC3U1iBZQ110BkY+kb9PVbFuQHKirvTXKIZBqpyzVNSXmIpjUs20XMRvW5PXCX/5X/MVheuNxweOQv2TL9+1LgwP/jerApcN3J3zTXMXA/r5XNGmTQ0wsFi2XArj1/9EUcvwTne8GDQdNxbq+e+l+43Jvpx9pd4n+W9Zo+9/ZwKUwQIs+pivFB9U0lUAooxRBnu3uCm7tR0nwXM0E11VyhNuCnHcuUWxJZmIgWodYbCeeHuC+ItNQNqvSz69RKvV001rPK1rWNcb9KX8aKpwNj/skXioNcPJ+eXlVHhNmlQ7N56CPuI8O13zIgaxlOkpddioHRgfQRVi25Mzqj3v/Bgk2nafig="
+  - travis_retry ./vendor/bin/php-coveralls

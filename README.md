@@ -2,7 +2,6 @@
 
 [![Packagist](https://img.shields.io/packagist/v/traviscarden/behat-table-comparison.svg)](https://packagist.org/packages/traviscarden/behat-table-comparison)
 [![Build Status](https://travis-ci.org/TravisCarden/behat-table-comparison.svg?branch=develop)](https://travis-ci.org/TravisCarden/behat-table-comparison)
-[![Code Climate](https://codeclimate.com/github/TravisCarden/behat-table-comparison/badges/gpa.svg)](https://codeclimate.com/github/TravisCarden/behat-table-comparison)
 [![Coverage Status](https://coveralls.io/repos/github/TravisCarden/behat-table-comparison/badge.svg?branch=master)](https://coveralls.io/github/TravisCarden/behat-table-comparison?branch=master)
 
 The Behat Table Comparison library provides an equality assertion for comparing Behat `TableNode` tables.
