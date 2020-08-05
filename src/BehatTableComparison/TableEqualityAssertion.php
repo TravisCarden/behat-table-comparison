@@ -299,6 +299,14 @@ class TableEqualityAssertion
      */
     protected function addArrayDiffMessageLines(array &$message, array $left, array $right, $label)
     {
+        $duplicates = array_diff_key($right, array_unique($right, SORT_REGULAR));
+        if (!empty($duplicates)) {
+            foreach ($duplicates as $duplicate) {
+                $dupe_str = implode(' | ', $duplicate);
+                $message = PHP_EOL . '~~~ Duplicate entry detected: ' . PHP_EOL . $dupe_str;
+                throw new \LogicException($message);
+            }
+        }
         $differences = array_filter($right, function (array $row) use ($left) {
             return !in_array($row, $left);
         });
