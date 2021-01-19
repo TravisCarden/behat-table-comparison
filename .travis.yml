@@ -17,6 +17,10 @@ branches:
     - develop
     - wip
 
+env:
+  global:
+    - XDEBUG_MODE=coverage
+
 jobs:
   fast_finish: true
 
