@@ -1,0 +1,54 @@
+---
+name: Tests
+
+on:
+    push:
+        branches: [ master, wip ]
+    pull_request:
+        branches: [ master ]
+    schedule:
+        # Every Monday at 00:00:00 UTC.
+        # @see https://crontab.cronhub.io/
+        -   cron: "0 0 * * 1"
+
+jobs:
+    build:
+        name: "PHP ${{ matrix.php }}"
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                php: ["7.3", "7.4", "8.0"]
+        steps:
+            -   name: "Set up PHP"
+                uses: shivammathur/setup-php@v2 # https://github.com/marketplace/actions/setup-php-action
+                with:
+                    php-version: "${{ matrix.php }}"
+
+            -   name: "Checkout code"
+                uses: actions/checkout@v2 # https://github.com/marketplace/actions/checkout
+
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v1 # https://github.com/marketplace/actions/install-composer-dependencies
+                with:
+                    composer-options: "--no-cache"
+
+            -   name: "Validate composer.json"
+                run: "composer validate"
+
+            -   name: "Run PHPCS"
+                run: vendor/bin/phpcs
+
+            -   name: "Run PHPUnit"
+                run: vendor/bin/phpunit
+
+            -   name: "Run Behat"
+                run: "vendor/bin/behat -fprogress --strict"
+
+            -   name: "Send coverage data to Coveralls.io"
+                if: "matrix.php == '7.4'" # Limit coverage data to one PHP version.
+                env:
+                    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                run: |
+                    composer global require php-coveralls/php-coveralls
+                    ~/.composer/vendor/bin/php-coveralls -v
