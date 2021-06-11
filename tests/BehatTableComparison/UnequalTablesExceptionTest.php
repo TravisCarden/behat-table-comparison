@@ -3,12 +3,13 @@
 namespace TravisCarden\Tests\BehatTableComparison;
 
 use Behat\Testwork\Tester\Exception\TesterException;
+use PHPUnit\Framework\TestCase;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
 
 /**
  * Provides unit tests for UnequalTablesException.
  */
-class UnequalTablesExceptionTest extends \PHPUnit_Framework_TestCase
+class UnequalTablesExceptionTest extends TestCase
 {
 
   /**

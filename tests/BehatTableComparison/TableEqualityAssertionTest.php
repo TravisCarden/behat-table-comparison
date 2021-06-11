@@ -3,6 +3,7 @@
 namespace TravisCarden\Tests\BehatTableComparison;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\TestCase;
 use TravisCarden\Tests\AssertionError;
 use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
@@ -10,7 +11,7 @@ use TravisCarden\BehatTableComparison\UnequalTablesException;
 /**
  * @covers \TravisCarden\BehatTableComparison\TableEqualityAssertion
  */
-class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
+class TableEqualityAssertionTest extends TestCase
 {
 
     const TABLE_REALISTIC_SORTED = [
@@ -43,7 +44,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
      */
     protected $arbitraryRight;
 
-    public function setUp()
+    public function setUp(): void
     {
         $this->arbitraryLeft = new TableNode([['left']]);
         $this->arbitraryRight = new TableNode([['right']]);
@@ -59,27 +60,6 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
         self::assertInstanceOf(TableEqualityAssertion::class, $assertion);
         self::assertSame($assertion->getExpected(), $this->arbitraryLeft);
         self::assertSame($assertion->getActual(), $this->arbitraryRight);
-    }
-
-    /**
-     * Tests setter methods with invalid arguments.
-     *
-     * @dataProvider providerTestSettersWithInvalidArguments
-     */
-    public function testSettersWithInvalidArguments($method, $arguments, $exception, $message)
-    {
-        $this->expectException($exception);
-        $this->expectExceptionMessage($message);
-        $assertion = new TableEqualityAssertion($this->arbitraryLeft, $this->arbitraryRight);
-        call_user_func_array([$assertion, $method], $arguments);
-    }
-
-    public function providerTestSettersWithInvalidArguments()
-    {
-        return [
-            ['setMissingRowsLabel', [false], AssertionError::class, 'Missing rows label must be a string.'],
-            ['setUnexpectedRowsLabel', [false], AssertionError::class, 'Unexpected rows label must be a string.'],
-        ];
     }
 
     public function testSettersPairs()
@@ -413,7 +393,8 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                 '-| 8  | eight    |',
                 '+| 8  | changed  |',
                 ' | 9  | nine     |',
-                ' | 10 | ten      |',
+                '-| 10 | ten      |', // These two lines seem unintuitive, but
+                '+| 10 | ten      |', // they come straight from the differ.
                 '+| 13 | thirteen |',
                 '',
             ]);

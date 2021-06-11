@@ -88,9 +88,8 @@ class TableEqualityAssertion
      *
      * @return $this
      */
-    public function setMissingRowsLabel($label)
+    public function setMissingRowsLabel(string $label)
     {
-        assert(is_string($label), 'Missing rows label must be a string.');
         $this->missingRowsLabel = $label;
         return $this;
     }
@@ -108,9 +107,8 @@ class TableEqualityAssertion
      *
      * @return $this
      */
-    public function setUnexpectedRowsLabel($label)
+    public function setUnexpectedRowsLabel(string $label)
     {
-        assert(is_string($label), 'Unexpected rows label must be a string.');
         $this->unexpectedRowsLabel = $label;
         return $this;
     }
