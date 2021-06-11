@@ -148,7 +148,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                 ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
-            $expected = implode($expected, PHP_EOL);
+            $expected = implode(PHP_EOL, $expected);
             self::assertSame($expected, $e->getMessage());
             throw $e;
         }
@@ -231,7 +231,7 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                 ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
-            self::assertUnspecifiedErrorException($e, $right);
+            $this->assertUnspecifiedErrorException($e, $right);
             throw $e;
         }
     }
@@ -335,12 +335,12 @@ class TableEqualityAssertionTest extends \PHPUnit_Framework_TestCase
                 ->expectHeader(['label', 'id'])
                 ->assert();
         } catch (\LogicException $e) {
-            $expected = implode([
+            $expected = implode(PHP_EOL, [
                 '--- Expected header',
                 '| label | id |',
                 '+++ Given',
                 '| Label one | id1 |',
-            ], PHP_EOL);
+            ]);
             self::assertSame($expected, $e->getMessage());
             throw $e;
         }
