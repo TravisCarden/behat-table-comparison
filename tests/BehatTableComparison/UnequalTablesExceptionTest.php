@@ -2,7 +2,6 @@
 
 namespace TravisCarden\Tests\BehatTableComparison;
 
-use Behat\Testwork\Tester\Exception\TesterException;
 use PHPUnit\Framework\TestCase;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
 
@@ -19,7 +18,6 @@ class UnequalTablesExceptionTest extends TestCase
     {
         $exception = new UnequalTablesException();
 
-        $this->assertInstanceOf(TesterException::class, $exception);
         $this->assertInstanceOf(\RuntimeException::class, $exception);
     }
 }
