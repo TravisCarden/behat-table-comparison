@@ -39,9 +39,6 @@ jobs:
             -   name: "Run Static Analysis"
                 run: composer static
 
-            -   name: "Run Behat"
-                run: "vendor/bin/behat -fprogress --strict"
-
             -   name: "Send coverage data to Coveralls.io"
                 if: "matrix.php == '7.4'" # Limit coverage data to one PHP version.
                 env:

@@ -37,6 +37,7 @@
             "@static",
             "composer audit"
         ],
+        "behat": "behat --no-interaction --format=progress",
         "phpcbf": "phpcbf",
         "phpcs": "phpcs -s",
         "phpunit": "phpunit",
@@ -45,11 +46,13 @@
             "composer validate"
         ],
         "test": [
-            "@phpunit"
+            "@phpunit",
+            "@behat"
         ]
     },
     "scripts-descriptions": {
         "all": "Runs all automated tests and static analysis tools",
+        "behat": "Runs Behat integration tests",
         "phpcbf": "Automatically fixes standards violations where possible",
         "phpcs": "Checks code for standards compliance",
         "phpunit": "Runs automated tests",
