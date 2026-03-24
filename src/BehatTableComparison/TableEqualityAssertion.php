@@ -15,6 +15,10 @@ class TableEqualityAssertion
 
     const DEFAULT_UNEXPECTED_ROWS_LABEL = 'Unexpected rows';
 
+    const DEFAULT_DUPLICATE_ROWS_LABEL = 'Duplicate rows';
+
+    const DEFAULT_ROW_ORDER_MISMATCH_LABEL = 'Row order mismatch';
+
     /**
      * @var \Behat\Gherkin\Node\TableNode
      */
@@ -34,6 +38,16 @@ class TableEqualityAssertion
      * @var string
      */
     protected $unexpectedRowsLabel = self::DEFAULT_UNEXPECTED_ROWS_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $duplicateRowsLabel = self::DEFAULT_DUPLICATE_ROWS_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $rowOrderMismatchLabel = self::DEFAULT_ROW_ORDER_MISMATCH_LABEL;
 
     /**
      * @var array
@@ -108,6 +122,44 @@ class TableEqualityAssertion
     public function setUnexpectedRowsLabel(string $label)
     {
         $this->unexpectedRowsLabel = $label;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getDuplicateRowsLabel()
+    {
+        return $this->duplicateRowsLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setDuplicateRowsLabel(string $label)
+    {
+        $this->duplicateRowsLabel = $label;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getRowOrderMismatchLabel()
+    {
+        return $this->rowOrderMismatchLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setRowOrderMismatchLabel(string $label)
+    {
+        $this->rowOrderMismatchLabel = $label;
         return $this;
     }
 
@@ -300,7 +352,7 @@ class TableEqualityAssertion
             $message[] = (new TableNode($unexpected_rows))->getTableAsString();
         }
         if (!empty($duplicate_rows)) {
-            $message[] = '*** Duplicate rows';
+            $message[] = '*** ' . $this->getDuplicateRowsLabel();
             foreach ($duplicate_rows as $line) {
                 $message[] = $line;
             }
@@ -398,7 +450,7 @@ class TableEqualityAssertion
      */
     protected function generateMessageForRowOrderMismatch(array $expected_rows, array $actual_rows)
     {
-        $message = ['*** Row order mismatch'];
+        $message = ['*** ' . $this->getRowOrderMismatchLabel()];
         $expected_positions = $this->mapRowPositions($expected_rows);
         $actual_positions = $this->mapRowPositions($actual_rows);
 

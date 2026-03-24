@@ -68,13 +68,25 @@ class TableEqualityAssertionTest extends TestCase
         $assertion = (new TableEqualityAssertion($this->arbitraryLeft, $this->arbitraryRight));
         self::assertTrue($assertion->isRowOrderRespected());
         self::assertEmpty($assertion->getExpectedHeader());
+        self::assertSame(TableEqualityAssertion::DEFAULT_MISSING_ROWS_LABEL, $assertion->getMissingRowsLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_UNEXPECTED_ROWS_LABEL, $assertion->getUnexpectedRowsLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_DUPLICATE_ROWS_LABEL, $assertion->getDuplicateRowsLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_ROW_ORDER_MISMATCH_LABEL, $assertion->getRowOrderMismatchLabel());
 
         // Set values.
         $assertion
             ->ignoreRowOrder()
-            ->expectHeader([1, 2, 3]);
+            ->expectHeader([1, 2, 3])
+            ->setMissingRowsLabel('Gone')
+            ->setUnexpectedRowsLabel('Extra')
+            ->setDuplicateRowsLabel('Cloned')
+            ->setRowOrderMismatchLabel('Scrambled');
         self::assertFalse($assertion->isRowOrderRespected());
         self::assertEquals([1, 2, 3], $assertion->getExpectedHeader());
+        self::assertSame('Gone', $assertion->getMissingRowsLabel());
+        self::assertSame('Extra', $assertion->getUnexpectedRowsLabel());
+        self::assertSame('Cloned', $assertion->getDuplicateRowsLabel());
+        self::assertSame('Scrambled', $assertion->getRowOrderMismatchLabel());
 
         // Unset values.
         $assertion
@@ -391,7 +403,32 @@ class TableEqualityAssertionTest extends TestCase
                 'Free rows!',
                 '+++',
             ],
+            'Duplicate rows' => [
+                'setDuplicateRowsLabel',
+                [new TableNode([[1], [2]]), new TableNode([[1], [2], [2]])],
+                'Cloned rows!',
+                '***',
+            ],
         ];
+    }
+
+    /**
+     * Tests assertion with a custom row order mismatch label.
+     */
+    public function testAssertionWithCustomRowOrderMismatchLabel()
+    {
+        $this->expectException(UnequalTablesException::class);
+        $assertion = (new TableEqualityAssertion(
+            new TableNode([[1], [2]]),
+            new TableNode([[2], [1]])
+        ))->setRowOrderMismatchLabel('Wrong order!');
+
+        try {
+            $assertion->assert();
+        } catch (UnequalTablesException $e) {
+            self::assertStringStartsWith('*** Wrong order!', $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
