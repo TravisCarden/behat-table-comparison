@@ -30,11 +30,5 @@
     },
     "config": {
         "sort-packages": true
-    },
-    "scripts": {
-        "post-install-cmd": [
-            "@install-pre-commit"
-        ],
-        "install-pre-commit": "if [ ! -x .git/hooks/pre-commit ]; then ln -s ../../resources/pre-commit .git/hooks/pre-commit; fi"
     }
 }
