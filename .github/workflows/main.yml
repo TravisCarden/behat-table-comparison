@@ -33,17 +33,11 @@ jobs:
                 with:
                     composer-options: "--no-cache"
 
-            -   name: "Validate composer.json"
-                run: "composer validate"
+            -   name: "Run Tests"
+                run: composer test
 
-            -   name: "Run PHPCS"
-                run: vendor/bin/phpcs
-
-            -   name: "Run PHPUnit"
-                run: vendor/bin/phpunit
-
-            -   name: "Run Behat"
-                run: "vendor/bin/behat -fprogress --strict"
+            -   name: "Run Static Analysis"
+                run: composer static
 
             -   name: "Send coverage data to Coveralls.io"
                 if: "matrix.php == '7.4'" # Limit coverage data to one PHP version.
