@@ -72,6 +72,10 @@ class TableEqualityAssertionTest extends TestCase
         self::assertSame(TableEqualityAssertion::DEFAULT_UNEXPECTED_ROWS_LABEL, $assertion->getUnexpectedRowsLabel());
         self::assertSame(TableEqualityAssertion::DEFAULT_DUPLICATE_ROWS_LABEL, $assertion->getDuplicateRowsLabel());
         self::assertSame(TableEqualityAssertion::DEFAULT_ROW_ORDER_MISMATCH_LABEL, $assertion->getRowOrderMismatchLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_EXPECTED_HEADER_LABEL, $assertion->getExpectedHeaderLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_GIVEN_HEADER_LABEL, $assertion->getGivenHeaderLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_EXPECTED_ORDER_LABEL, $assertion->getExpectedOrderLabel());
+        self::assertSame(TableEqualityAssertion::DEFAULT_ACTUAL_ORDER_LABEL, $assertion->getActualOrderLabel());
 
         // Set values.
         $assertion
@@ -80,13 +84,21 @@ class TableEqualityAssertionTest extends TestCase
             ->setMissingRowsLabel('Gone')
             ->setUnexpectedRowsLabel('Extra')
             ->setDuplicateRowsLabel('Cloned')
-            ->setRowOrderMismatchLabel('Scrambled');
+            ->setRowOrderMismatchLabel('Scrambled')
+            ->setExpectedHeaderLabel('Expected columns')
+            ->setGivenHeaderLabel('Actual columns')
+            ->setExpectedOrderLabel('Expected sequence')
+            ->setActualOrderLabel('Actual sequence');
         self::assertFalse($assertion->isRowOrderRespected());
         self::assertEquals([1, 2, 3], $assertion->getExpectedHeader());
         self::assertSame('Gone', $assertion->getMissingRowsLabel());
         self::assertSame('Extra', $assertion->getUnexpectedRowsLabel());
         self::assertSame('Cloned', $assertion->getDuplicateRowsLabel());
         self::assertSame('Scrambled', $assertion->getRowOrderMismatchLabel());
+        self::assertSame('Expected columns', $assertion->getExpectedHeaderLabel());
+        self::assertSame('Actual columns', $assertion->getGivenHeaderLabel());
+        self::assertSame('Expected sequence', $assertion->getExpectedOrderLabel());
+        self::assertSame('Actual sequence', $assertion->getActualOrderLabel());
 
         // Unset values.
         $assertion
@@ -354,11 +366,11 @@ class TableEqualityAssertionTest extends TestCase
                 '*** Row order mismatch',
                 '| id1 | Label one | should be at position 1, found at 2',
                 '| id2 | Label two | should be at position 2, found at 1',
-                'Expected order:',
+                'Expected order',
                 '| id1 | Label one   |',
                 '| id2 | Label two   |',
                 '| id3 | Label three |',
-                'Actual order:',
+                'Actual order',
                 '| id2 | Label two   |',
                 '| id1 | Label one   |',
                 '| id3 | Label three |',
@@ -432,6 +444,50 @@ class TableEqualityAssertionTest extends TestCase
     }
 
     /**
+     * Tests assertion with custom header labels.
+     */
+    public function testAssertionWithCustomHeaderLabels()
+    {
+        $this->expectException(\LogicException::class);
+        $rows = [['Label one', 'id1'], ['Label two', 'id2']];
+        $left = $right = new TableNode($rows);
+
+        try {
+            (new TableEqualityAssertion($left, $right))
+                ->expectHeader(['label', 'id'])
+                ->setExpectedHeaderLabel('Expected columns')
+                ->setGivenHeaderLabel('Actual columns')
+                ->assert();
+        } catch (\LogicException $e) {
+            self::assertStringContainsString('--- Expected columns', $e->getMessage());
+            self::assertStringContainsString('+++ Actual columns', $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
+     * Tests assertion with custom order labels.
+     */
+    public function testAssertionWithCustomOrderLabels()
+    {
+        $this->expectException(UnequalTablesException::class);
+        $assertion = (new TableEqualityAssertion(
+            new TableNode([[1], [2]]),
+            new TableNode([[2], [1]])
+        ))
+            ->setExpectedOrderLabel('Expected sequence')
+            ->setActualOrderLabel('Actual sequence');
+
+        try {
+            $assertion->assert();
+        } catch (UnequalTablesException $e) {
+            self::assertStringContainsString('Expected sequence', $e->getMessage());
+            self::assertStringContainsString('Actual sequence', $e->getMessage());
+            throw $e;
+        }
+    }
+
+    /**
      * Tests assertion with a table header.
      */
     public function testAssertionWithHeader()
@@ -465,7 +521,7 @@ class TableEqualityAssertionTest extends TestCase
             $expected = implode(PHP_EOL, [
                 '--- Expected header',
                 '| label | id |',
-                '+++ Given',
+                '+++ Given header',
                 '| Label one | id1 |',
             ]);
             self::assertSame($expected, $e->getMessage());
@@ -526,10 +582,10 @@ class TableEqualityAssertionTest extends TestCase
                     '| id1 | alpha |',
                     '+++ Unexpected rows',
                     '| id1 | CHANGED |',
-                    'Expected order:',
+                    'Expected order',
                     '| id1 | alpha |',
                     '| id2 | beta  |',
-                    'Actual order:',
+                    'Actual order',
                     '| id1 | CHANGED |',
                     '| id2 | beta    |',
                 ],
@@ -554,12 +610,12 @@ class TableEqualityAssertionTest extends TestCase
                     '+++ Unexpected rows',
                     '| id1 | CHANGED |',
                     '| id5 | epsilon |',
-                    'Expected order:',
+                    'Expected order',
                     '| id1 | alpha |',
                     '| id2 | beta  |',
                     '| id3 | gamma |',
                     '| id4 | delta |',
-                    'Actual order:',
+                    'Actual order',
                     '| id3 | gamma   |',
                     '| id1 | CHANGED |',
                     '| id4 | delta   |',
@@ -615,7 +671,7 @@ class TableEqualityAssertionTest extends TestCase
                 '| 13 | thirteen |',
                 '*** Duplicate rows',
                 '| 2 | two | (appears 2 times, expected 1)',
-                'Expected order:',
+                'Expected order',
                 '| 1  | one   |',
                 '| 2  | two   |',
                 '| 3  | three |',
@@ -626,7 +682,7 @@ class TableEqualityAssertionTest extends TestCase
                 '| 8  | eight |',
                 '| 9  | nine  |',
                 '| 10 | ten   |',
-                'Actual order:',
+                'Actual order',
                 '| 1  | one      |',
                 '| 2  | two      |',
                 '| 2  | two      |',

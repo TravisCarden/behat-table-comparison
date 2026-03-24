@@ -51,6 +51,7 @@ class FeatureContext implements Context
             ->ignoreRowOrder()
             ->setMissingRowsLabel('Missing characters')
             ->setUnexpectedRowsLabel('Unexpected characters')
+            ->setDuplicateRowsLabel('Duplicate characters')
             ->assert();
     }
 

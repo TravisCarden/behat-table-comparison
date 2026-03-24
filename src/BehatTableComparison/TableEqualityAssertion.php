@@ -18,6 +18,14 @@ class TableEqualityAssertion
 
     const DEFAULT_ROW_ORDER_MISMATCH_LABEL = 'Row order mismatch';
 
+    const DEFAULT_EXPECTED_HEADER_LABEL = 'Expected header';
+
+    const DEFAULT_GIVEN_HEADER_LABEL = 'Given header';
+
+    const DEFAULT_EXPECTED_ORDER_LABEL = 'Expected order';
+
+    const DEFAULT_ACTUAL_ORDER_LABEL = 'Actual order';
+
     /**
      * @var \Behat\Gherkin\Node\TableNode
      */
@@ -47,6 +55,26 @@ class TableEqualityAssertion
      * @var string
      */
     protected $rowOrderMismatchLabel = self::DEFAULT_ROW_ORDER_MISMATCH_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $expectedHeaderLabel = self::DEFAULT_EXPECTED_HEADER_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $givenHeaderLabel = self::DEFAULT_GIVEN_HEADER_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $expectedOrderLabel = self::DEFAULT_EXPECTED_ORDER_LABEL;
+
+    /**
+     * @var string
+     */
+    protected $actualOrderLabel = self::DEFAULT_ACTUAL_ORDER_LABEL;
 
     /**
      * @var array
@@ -163,6 +191,82 @@ class TableEqualityAssertion
     }
 
     /**
+     * @return string
+     */
+    public function getExpectedHeaderLabel()
+    {
+        return $this->expectedHeaderLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setExpectedHeaderLabel(string $label)
+    {
+        $this->expectedHeaderLabel = $label;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getGivenHeaderLabel()
+    {
+        return $this->givenHeaderLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setGivenHeaderLabel(string $label)
+    {
+        $this->givenHeaderLabel = $label;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getExpectedOrderLabel()
+    {
+        return $this->expectedOrderLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setExpectedOrderLabel(string $label)
+    {
+        $this->expectedOrderLabel = $label;
+        return $this;
+    }
+
+    /**
+     * @return string
+     */
+    public function getActualOrderLabel()
+    {
+        return $this->actualOrderLabel;
+    }
+
+    /**
+     * @param string $label
+     *
+     * @return $this
+     */
+    public function setActualOrderLabel(string $label)
+    {
+        $this->actualOrderLabel = $label;
+        return $this;
+    }
+
+    /**
      * @return array
      */
     public function getExpectedHeader()
@@ -243,9 +347,9 @@ class TableEqualityAssertion
         }
 
         $message = [
-            '--- Expected header',
+            '--- ' . $this->getExpectedHeaderLabel(),
             (new TableNode([$expected_header]))->getTableAsString(),
-            '+++ Given',
+            '+++ ' . $this->getGivenHeaderLabel(),
             (new TableNode([$actual_header]))->getTableAsString(),
         ];
         throw new \LogicException(implode(PHP_EOL, $message));
@@ -472,9 +576,9 @@ class TableEqualityAssertion
             }
         }
 
-        $message[] = 'Expected order:';
+        $message[] = $this->getExpectedOrderLabel();
         $message[] = (new TableNode($expected_rows))->getTableAsString();
-        $message[] = 'Actual order:';
+        $message[] = $this->getActualOrderLabel();
         $message[] = (new TableNode($actual_rows))->getTableAsString();
 
         return implode(PHP_EOL, $message);
@@ -497,9 +601,9 @@ class TableEqualityAssertion
             $message[] = $content_message;
         }
 
-        $message[] = 'Expected order:';
+        $message[] = $this->getExpectedOrderLabel();
         $message[] = (new TableNode($expected_rows))->getTableAsString();
-        $message[] = 'Actual order:';
+        $message[] = $this->getActualOrderLabel();
         $message[] = (new TableNode($actual_rows))->getTableAsString();
 
         return implode(PHP_EOL, $message);
