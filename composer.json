@@ -37,11 +37,14 @@
     },
     "scripts": {
         "all": [
-            "@test",
-            "@static",
+            "@fast",
             "composer audit"
         ],
         "behat": "behat --no-interaction --format=progress",
+        "fast": [
+            "@test",
+            "@static"
+        ],
         "phpcbf": "phpcbf",
         "phpcs": "phpcs -s",
         "phpunit": "phpunit",
@@ -56,8 +59,9 @@
         ]
     },
     "scripts-descriptions": {
-        "all": "Runs all automated tests and static analysis tools",
+        "all": "Runs fast checks plus dependency audit (audit may make HTTP requests)",
         "behat": "Runs Behat integration tests",
+        "fast": "Runs all tests and static analysis tools (no dependency audit)",
         "phpcbf": "Automatically fixes standards violations where possible",
         "phpcs": "Checks code for standards compliance",
         "phpunit": "Runs automated tests",
