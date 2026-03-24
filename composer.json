@@ -30,5 +30,39 @@
     },
     "config": {
         "sort-packages": true
+    },
+    "scripts": {
+        "all": [
+            "@test",
+            "@static",
+            "composer audit"
+        ],
+        "phpcbf": "phpcbf",
+        "phpcs": "phpcs -s",
+        "phpunit": "phpunit",
+        "static": [
+            "@phpcs",
+            "composer validate"
+        ],
+        "test": [
+            "@phpunit"
+        ]
+    },
+    "scripts-descriptions": {
+        "all": "Runs all automated tests and static analysis tools",
+        "phpcbf": "Automatically fixes standards violations where possible",
+        "phpcs": "Checks code for standards compliance",
+        "phpunit": "Runs automated tests",
+        "static": "Runs all static analysis tools",
+        "test": "Runs all tests"
+    },
+    "scripts-aliases": {
+        "phpcbf": [
+            "cbf",
+            "fix"
+        ],
+        "phpcs": [
+            "cs"
+        ]
     }
 }
