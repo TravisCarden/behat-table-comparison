@@ -193,14 +193,11 @@ class TableEqualityAssertionTest extends TestCase
     }
 
     /**
-     * Tests assertion with tables that are unequal in ways that do not yet have error messages specified.
+     * Tests assertion with complex differences while ignoring row order.
      *
-     * @todo Specify these scenarios.
-     * @see https://github.com/TravisCarden/behat-table-comparison/issues/1
-     *
-     * @dataProvider providerTestAssertionWithUnspecifiedInequalities
+     * @dataProvider providerTestAssertionWithComplexDifferencesIgnoringRowOrder
      */
-    public function testAssertionWithUnspecifiedInequalities($left, $right)
+    public function testAssertionWithComplexDifferencesIgnoringRowOrder($left, $right, $expected)
     {
         $this->expectException(UnequalTablesException::class);
         $left = new TableNode($left);
@@ -211,15 +208,16 @@ class TableEqualityAssertionTest extends TestCase
                 ->ignoreRowOrder()
                 ->assert();
         } catch (UnequalTablesException $e) {
-            $this->assertUnspecifiedErrorException($e, $right);
+            $expected = implode(PHP_EOL, $expected);
+            self::assertSame($expected, $e->getMessage());
             throw $e;
         }
     }
 
-    public function providerTestAssertionWithUnspecifiedInequalities()
+    public function providerTestAssertionWithComplexDifferencesIgnoringRowOrder()
     {
         return [
-            'Duplicate rows on right' => [
+            'Duplicate rows on actual' => [
                 [
                     ['id1', 'Label one'],
                     ['id2', 'Label two'],
@@ -228,22 +226,134 @@ class TableEqualityAssertionTest extends TestCase
                     ['id1', 'Label one'],
                     ['id2', 'Label two'],
                     ['id2', 'Label two'],
-                    ['id2', 'Label two'],
+                ],
+                [
+                    '*** Duplicate rows',
+                    '| id2 | Label two | (appears 2 times, expected 1)',
                 ],
             ],
-            'Duplicate rows on left' => [
+            'Duplicate rows on expected' => [
                 [
                     ['id1', 'Label one'],
-                    ['id2', 'Label two'],
                     ['id2', 'Label two'],
                     ['id2', 'Label two'],
                 ],
                 [
                     ['id1', 'Label one'],
                     ['id2', 'Label two'],
+                ],
+                [
+                    '*** Duplicate rows',
+                    '| id2 | Label two | (appears 1 time, expected 2)',
+                ],
+            ],
+            'Duplicate rows fully missing from actual' => [
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                ],
+                [
+                    ['id1', 'Label one'],
+                ],
+                [
+                    '--- Missing rows',
+                    '| id2 | Label two |',
+                    '| id2 | Label two |',
+                ],
+            ],
+            'Duplicate rows fully unexpected in actual' => [
+                [
+                    ['id1', 'Label one'],
+                ],
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                ],
+                [
+                    '+++ Unexpected rows',
+                    '| id2 | Label two |',
+                    '| id2 | Label two |',
+                ],
+            ],
+            'Missing, unexpected, and duplicate rows together' => [
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id3', 'Label three'],
+                ],
+                [
+                    ['id1', 'Label one'],
+                    ['id2', 'Label two'],
+                    ['id2', 'Label two'],
+                    ['id4', 'Label four'],
+                ],
+                [
+                    '--- Missing rows',
+                    '| id3 | Label three |',
+                    '+++ Unexpected rows',
+                    '| id4 | Label four |',
+                    '*** Duplicate rows',
+                    '| id2 | Label two | (appears 2 times, expected 1)',
+                ],
+            ],
+            'Changed row becomes missing and unexpected' => [
+                [
+                    ['id1', 'same'],
+                    ['id2', 'before'],
+                ],
+                [
+                    ['id1', 'same'],
+                    ['id2', 'after'],
+                ],
+                [
+                    '--- Missing rows',
+                    '| id2 | before |',
+                    '+++ Unexpected rows',
+                    '| id2 | after |',
                 ],
             ],
         ];
+    }
+
+    /**
+     * Tests row order mismatch display while respecting row order.
+     */
+    public function testAssertionWithRowOrderMismatchMessage()
+    {
+        $this->expectException(UnequalTablesException::class);
+        $left = new TableNode([
+            ['id1', 'Label one'],
+            ['id2', 'Label two'],
+            ['id3', 'Label three'],
+        ]);
+        $right = new TableNode([
+            ['id2', 'Label two'],
+            ['id1', 'Label one'],
+            ['id3', 'Label three'],
+        ]);
+
+        try {
+            (new TableEqualityAssertion($left, $right))
+                ->assert();
+        } catch (UnequalTablesException $e) {
+            $expected = implode(PHP_EOL, [
+                '*** Row order mismatch',
+                '| id1 | Label one | should be at position 1, found at 2',
+                '| id2 | Label two | should be at position 2, found at 1',
+                'Expected order:',
+                '| id1 | Label one   |',
+                '| id2 | Label two   |',
+                '| id3 | Label three |',
+                'Actual order:',
+                '| id2 | Label two   |',
+                '| id1 | Label one   |',
+                '| id3 | Label three |',
+            ]);
+            self::assertSame($expected, $e->getMessage());
+            throw $e;
+        }
     }
 
     /**
@@ -402,19 +512,5 @@ class TableEqualityAssertionTest extends TestCase
 
             throw $e;
         }
-    }
-
-    /**
-     * @param \Exception $e
-     * @param TableNode $right
-     */
-    protected function assertUnspecifiedErrorException(\Exception $e, TableNode $right)
-    {
-        $message = implode(PHP_EOL, [
-            TableEqualityAssertion::UNSPECIFIED_DIFFERENCE_NOTICE,
-            '*** Given',
-            $right->getTableAsString(),
-        ]);
-        self::assertSame($message, $e->getMessage());
     }
 }
