@@ -15,8 +15,7 @@
     ],
     "require": {
         "php": "^7.3 || ^8.0",
-        "behat/gherkin": "^4.4.4",
-        "sebastian/diff": ">=1.4"
+        "behat/gherkin": "^4.4.4"
     },
     "require-dev": {
         "behat/behat": "^3.3",
