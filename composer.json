@@ -20,6 +20,7 @@
     },
     "require-dev": {
         "behat/behat": "^3.3",
+        "ergebnis/composer-normalize": "^2.50",
         "phpunit/phpunit": "^9.5",
         "squizlabs/php_codesniffer": "^3.6"
     },
@@ -29,6 +30,10 @@
         }
     },
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true
+        },
         "sort-packages": true
     },
     "scripts": {
@@ -43,7 +48,8 @@
         "phpunit": "phpunit",
         "static": [
             "@phpcs",
-            "composer validate"
+            "composer validate",
+            "composer normalize --dry-run"
         ],
         "test": [
             "@phpunit",
