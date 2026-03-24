@@ -7,6 +7,9 @@ use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 
 /**
  * Defines application features from the specific context.
+ *
+ * This simulates values taken from the actual application. They would not
+ * usually be hardcoded like this.
  */
 class FeatureContext implements Context
 {
