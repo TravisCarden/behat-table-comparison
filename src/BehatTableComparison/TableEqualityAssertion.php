@@ -3,7 +3,6 @@
 namespace TravisCarden\BehatTableComparison;
 
 use Behat\Gherkin\Node\TableNode;
-use SebastianBergmann\Diff\Differ;
 
 /**
  * Asserts equality between two TableNodes.
@@ -283,9 +282,8 @@ class TableEqualityAssertion
                 throw new UnequalTablesException($message);
             }
 
-            $diff = (new Differ("--- Expected\n+++ Actual\n"))
-                ->diff($expected_body, $actual_body);
-            throw new UnequalTablesException($diff);
+            $message = $this->generateMessageForContentAndOrderDifferences($expected_body_rows, $actual_body_rows);
+            throw new UnequalTablesException($message);
         }
     }
 
@@ -472,6 +470,31 @@ class TableEqualityAssertion
                     $actual_position
                 );
             }
+        }
+
+        $message[] = 'Expected order:';
+        $message[] = (new TableNode($expected_rows))->getTableAsString();
+        $message[] = 'Actual order:';
+        $message[] = (new TableNode($actual_rows))->getTableAsString();
+
+        return implode(PHP_EOL, $message);
+    }
+
+    /**
+     * @param array $expected_rows
+     * @param array $actual_rows
+     *
+     * @return string
+     */
+    protected function generateMessageForContentAndOrderDifferences(array $expected_rows, array $actual_rows)
+    {
+        $sorted_expected = $this->sortTable(new TableNode($expected_rows))->getRows();
+        $sorted_actual = $this->sortTable(new TableNode($actual_rows))->getRows();
+
+        $message = [];
+        $content_message = $this->generateMessageForPostSortDifferences($sorted_expected, $sorted_actual);
+        if ($content_message) {
+            $message[] = $content_message;
         }
 
         $message[] = 'Expected order:';

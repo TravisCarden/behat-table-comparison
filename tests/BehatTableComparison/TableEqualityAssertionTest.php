@@ -489,7 +489,88 @@ class TableEqualityAssertionTest extends TestCase
     }
 
     /**
-     * Tests assertion with complex differences.
+     * Tests assertion with content differences while respecting row order.
+     *
+     * @dataProvider providerTestAssertionWithContentDifferencesRespectingRowOrder
+     */
+    public function testAssertionWithContentDifferencesRespectingRowOrder($left, $right, $expected)
+    {
+        $this->expectException(UnequalTablesException::class);
+        $left = new TableNode($left);
+        $right = new TableNode($right);
+
+        try {
+            (new TableEqualityAssertion($left, $right))
+                ->assert();
+        } catch (UnequalTablesException $e) {
+            $expected = implode(PHP_EOL, $expected);
+            self::assertSame($expected, $e->getMessage());
+            throw $e;
+        }
+    }
+
+    public function providerTestAssertionWithContentDifferencesRespectingRowOrder()
+    {
+        return [
+            'Content differences, same order' => [
+                [
+                    ['id1', 'alpha'],
+                    ['id2', 'beta'],
+                ],
+                [
+                    ['id1', 'CHANGED'],
+                    ['id2', 'beta'],
+                ],
+                [
+                    '--- Missing rows',
+                    '| id1 | alpha |',
+                    '+++ Unexpected rows',
+                    '| id1 | CHANGED |',
+                    'Expected order:',
+                    '| id1 | alpha |',
+                    '| id2 | beta  |',
+                    'Actual order:',
+                    '| id1 | CHANGED |',
+                    '| id2 | beta    |',
+                ],
+            ],
+            'Content differences and row order both differ' => [
+                [
+                    ['id1', 'alpha'],
+                    ['id2', 'beta'],
+                    ['id3', 'gamma'],
+                    ['id4', 'delta'],
+                ],
+                [
+                    ['id3', 'gamma'],
+                    ['id1', 'CHANGED'],
+                    ['id4', 'delta'],
+                    ['id5', 'epsilon'],
+                ],
+                [
+                    '--- Missing rows',
+                    '| id1 | alpha |',
+                    '| id2 | beta  |',
+                    '+++ Unexpected rows',
+                    '| id1 | CHANGED |',
+                    '| id5 | epsilon |',
+                    'Expected order:',
+                    '| id1 | alpha |',
+                    '| id2 | beta  |',
+                    '| id3 | gamma |',
+                    '| id4 | delta |',
+                    'Actual order:',
+                    '| id3 | gamma   |',
+                    '| id1 | CHANGED |',
+                    '| id4 | delta   |',
+                    '| id5 | epsilon |',
+                ],
+            ],
+        ];
+    }
+
+    /**
+     * Tests assertion with complex differences respecting row order.
      */
     public function testAssertionWithComplexDifferences()
     {
@@ -526,24 +607,37 @@ class TableEqualityAssertionTest extends TestCase
                 ->assert();
         } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, [
-                '--- Expected',
-                '+++ Actual',
-                '@@ @@',
-                ' | 1  | one      |',
-                ' | 2  | two      |',
-                '+| 2  | two      |',
-                ' | 3  | three    |',
-                ' | 4  | four     |',
-                '-| 5  | five     |',
-                ' | 6  | six      |',
-                ' | 7  | seven    |',
-                '-| 8  | eight    |',
-                '+| 8  | changed  |',
-                ' | 9  | nine     |',
-                '-| 10 | ten      |', // These two lines seem unintuitive, but
-                '+| 10 | ten      |', // they come straight from the differ.
-                '+| 13 | thirteen |',
-                '',
+                '--- Missing rows',
+                '| 5 | five  |',
+                '| 8 | eight |',
+                '+++ Unexpected rows',
+                '| 8  | changed  |',
+                '| 13 | thirteen |',
+                '*** Duplicate rows',
+                '| 2 | two | (appears 2 times, expected 1)',
+                'Expected order:',
+                '| 1  | one   |',
+                '| 2  | two   |',
+                '| 3  | three |',
+                '| 4  | four  |',
+                '| 5  | five  |',
+                '| 6  | six   |',
+                '| 7  | seven |',
+                '| 8  | eight |',
+                '| 9  | nine  |',
+                '| 10 | ten   |',
+                'Actual order:',
+                '| 1  | one      |',
+                '| 2  | two      |',
+                '| 2  | two      |',
+                '| 3  | three    |',
+                '| 4  | four     |',
+                '| 6  | six      |',
+                '| 7  | seven    |',
+                '| 8  | changed  |',
+                '| 9  | nine     |',
+                '| 10 | ten      |',
+                '| 13 | thirteen |',
             ]);
             self::assertSame($expected, $e->getMessage());
 
