@@ -1,9 +1,12 @@
 {
     "name": "traviscarden/behat-table-comparison",
     "description": "Provides an equality assertion for comparing Behat TableNode tables.",
-    "type": "library",
-    "keywords": ["Behat", "Gherkin"],
     "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "Behat",
+        "Gherkin"
+    ],
     "authors": [
         {
             "name": "Travis Carden",
