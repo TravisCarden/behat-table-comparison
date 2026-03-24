@@ -62,6 +62,48 @@ Output is like the following:
 
 ![Example Output](resources/example-output.gif)
 
+## Error Message Specification
+
+When tables are unequal, the assertion throws a detailed error message with labeled sections.
+
+### Difference sections
+
+- `--- Missing rows`: Rows present in expected but not in actual.
+- `+++ Unexpected rows`: Rows present in actual but not in expected.
+- `*** Duplicate rows`: Rows present on both sides with different multiplicity, shown as `(appears N time/times, expected M)`.
+
+### Row-order diagnostics
+
+When row order is respected and rows are out of order:
+
+- `*** Row order mismatch` is shown.
+- Per-row diagnostics are listed as `... should be at position X, found at Y`.
+- Full order context is appended under:
+    - `Expected order`
+    - `Actual order`
+
+When row content differs while respecting row order, semantic missing/unexpected/duplicate sections are shown first, then full expected/actual order tables.
+
+### Header mismatch diagnostics
+
+When `expectHeader(...)` is used and the first row does not match:
+
+- `--- Expected header`
+- `+++ Given header`
+
+### Label customization
+
+All user-facing section labels are configurable via defaults plus getter/setter pairs:
+
+- Missing rows
+- Unexpected rows
+- Duplicate rows
+- Row order mismatch
+- Expected header
+- Given header
+- Expected order subheading
+- Actual order subheading
+
 ## Examples
 
 See [`features/bootstrap/FeatureContext.php`](features/bootstrap/FeatureContext.php) and [`features/examples.feature`](features/examples.feature) for more examples.
