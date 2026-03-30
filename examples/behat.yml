@@ -1,9 +1,7 @@
 default:
-  autoload:
-    '': '%paths.base%/bootstrap'
   suites:
     default:
       paths:
         - features
       contexts:
-        - FeatureContext
+        - TravisCarden\BehatTableComparison\Examples\Bootstrap\FeatureContext

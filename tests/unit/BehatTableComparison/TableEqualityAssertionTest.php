@@ -1,10 +1,10 @@
 <?php
 
-namespace TravisCarden\Tests\BehatTableComparison;
+namespace TravisCarden\BehatTableComparison\Tests\Unit;
 
 use Behat\Gherkin\Node\TableNode;
 use PHPUnit\Framework\TestCase;
-use TravisCarden\Tests\AssertionError;
+use TravisCarden\BehatTableComparison\Tests\AssertionError;
 use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
 

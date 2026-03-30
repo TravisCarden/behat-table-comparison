@@ -1,6 +1,6 @@
 <?php
 
-namespace TravisCarden\Tests\BehatTableComparison;
+namespace TravisCarden\BehatTableComparison\Tests\Unit;
 
 use PHPUnit\Framework\TestCase;
 use TravisCarden\BehatTableComparison\UnequalTablesException;

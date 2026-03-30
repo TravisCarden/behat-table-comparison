@@ -2,6 +2,7 @@
 <ruleset name="BehatTableComparison">
     <description>Coding standard for traviscarden/behat-table-comparison.</description>
 
+    <file>examples</file>
     <file>src</file>
     <file>tests</file>
 

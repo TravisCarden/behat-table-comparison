@@ -28,6 +28,12 @@
             "TravisCarden\\BehatTableComparison\\": "src/BehatTableComparison/"
         }
     },
+    "autoload-dev": {
+        "psr-4": {
+            "TravisCarden\\BehatTableComparison\\Examples\\": "examples/",
+            "TravisCarden\\BehatTableComparison\\Tests\\": "tests/"
+        }
+    },
     "config": {
         "allow-plugins": {
             "dealerdirect/phpcodesniffer-composer-installer": true,

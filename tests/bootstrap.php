@@ -1,6 +1,6 @@
 <?php
 
-namespace TravisCarden\Tests;
+namespace TravisCarden\BehatTableComparison\Tests;
 
 require __DIR__ . '/../vendor/autoload.php';
 
