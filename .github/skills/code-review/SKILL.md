@@ -62,6 +62,7 @@ For this repository specifically:
 - Confirm compatibility with PHP `^7.3 || ^8.0`.
 - Verify fluent API methods still return `$this` where expected.
 - When assertion message output changes, require matching updates to `README.md` and integration expectations in `features/integration-tests.feature`.
+- Treat `docs/contract-surface.md` as the contract source of truth and flag any drift from implementation/tests/docs.
 
 ## Design Quality Checks (Required In `deep` Mode)
 
@@ -87,6 +88,7 @@ Ask one focused clarifying question only when design intent ambiguity changes co
 
 When behavior changes, verify these are aligned:
 
+- `docs/contract-surface.md`.
 - `README.md` usage and output-spec sections.
 - feature examples in `features/examples.feature`.
 - integration expectations in `features/integration-tests.feature`.
@@ -131,7 +133,7 @@ When running in `deep` mode, append:
 - `Contract classification` (single value with one-line rationale)
 - `Evidence checked` (files reviewed for behavior/contract/docs/tests):
    - code (`src/BehatTableComparison/*.php`)
-   - docs/examples (`README.md`, `features/*.feature`)
+   - docs/examples (`docs/contract-surface.md`, `README.md`, `features/*.feature`)
    - tests (`tests/BehatTableComparison/*.php`, `features/bootstrap/*.php`)
 
 Before finalizing any review, include:

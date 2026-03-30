@@ -11,6 +11,7 @@ Use for concrete implementation work in this package, including:
 - assertion message/label behavior updates
 - PHPUnit and Behat coverage updates
 - README usage/output documentation alignment
+- contract-surface updates in `docs/contract-surface.md`
 
 ## Role
 
@@ -31,11 +32,13 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
    - public methods/signatures
    - exception types
    - diagnostic labels or message sections
+   - anything documented in `docs/contract-surface.md`
 2. Implement the smallest code change in `src/BehatTableComparison/`.
 3. Update coverage:
    - unit tests in `tests/BehatTableComparison/`
    - integration behavior in `features/integration-tests.feature` when user-facing output changes
 4. Update docs:
+   - `docs/contract-surface.md` when any contract guarantee changes
    - `README.md` when API usage or output text changes
 5. Run relevant validation commands.
 

@@ -66,6 +66,8 @@ Output is like the following:
 
 When tables are unequal, the assertion throws a detailed error message with labeled sections.
 
+For a complete list of stable/public guarantees, see [Contract Surface](contract-surface.md).
+
 ### Difference sections
 
 - `--- Missing rows`: Rows present in expected but not in actual.
