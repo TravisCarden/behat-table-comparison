@@ -108,7 +108,7 @@ All user-facing section labels are configurable via defaults plus getter/setter 
 
 ## Examples
 
-See [`features/bootstrap/FeatureContext.php`](../features/bootstrap/FeatureContext.php) and [`features/examples.feature`](../features/examples.feature) for more examples.
+See [`examples/bootstrap/FeatureContext.php`](../examples/bootstrap/FeatureContext.php) and [`examples/features/examples.feature`](../examples/features/examples.feature) for more examples.
 
 ## Contribution
 

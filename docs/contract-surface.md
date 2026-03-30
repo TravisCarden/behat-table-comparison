@@ -79,8 +79,8 @@ Use these labels when reporting changes:
 When contract behavior changes:
 
 - Update `README.md` contract-facing sections.
-- Update PHPUnit coverage in `tests/BehatTableComparison/`.
-- Update Behat integration coverage in `features/integration-tests.feature` when user-facing diagnostics change.
+- Update PHPUnit coverage in `tests/unit/BehatTableComparison/`.
+- Update Behat integration coverage in `tests/behat/features/integration-tests.feature` when user-facing diagnostics change.
 - Call out change classification and migration notes in release notes.
 
 ## Contract Review Checklist (Release PR)

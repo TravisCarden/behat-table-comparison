@@ -5,8 +5,9 @@ This repository is a small PHP library, not an application service. Optimize for
 ## Project Shape
 
 - Main code: `src/BehatTableComparison/`
-- Unit tests: `tests/BehatTableComparison/` (PHPUnit)
-- End-to-end usage tests: `features/` and `features/bootstrap/` (Behat)
+- Unit tests: `tests/unit/BehatTableComparison/` (PHPUnit)
+- Self-test scenarios: `tests/behat/features/` and `tests/behat/bootstrap/` (Behat)
+- Runnable examples: `examples/features/` and `examples/bootstrap/`
 - Public API center: `TableEqualityAssertion` and `UnequalTablesException`
 - Contract source of truth: `docs/contract-surface.md`
 
@@ -23,8 +24,8 @@ This repository is a small PHP library, not an application service. Optimize for
 - Do not modify `vendor/`, CI history badges, or unrelated project metadata unless explicitly requested.
 - Treat `docs/contract-surface.md` as authoritative for what is stable in `1.x`.
 - For behavior changes, update both:
-  - PHPUnit tests in `tests/BehatTableComparison/`
-  - Behat integration coverage in `features/integration-tests.feature` when user-facing output changes
+  - PHPUnit tests in `tests/unit/BehatTableComparison/`
+  - Behat integration coverage in `tests/behat/features/integration-tests.feature` when user-facing output changes
 - When error message text changes, also update `README.md` sections that document output labels and diagnostics.
 - If a change alters public methods, exception behavior, or diagnostics semantics, update `docs/contract-surface.md` in the same change.
 

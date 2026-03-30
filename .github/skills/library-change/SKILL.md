@@ -35,8 +35,8 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
    - anything documented in `docs/contract-surface.md`
 2. Implement the smallest code change in `src/BehatTableComparison/`.
 3. Update coverage:
-   - unit tests in `tests/BehatTableComparison/`
-   - integration behavior in `features/integration-tests.feature` when user-facing output changes
+   - unit tests in `tests/unit/BehatTableComparison/`
+   - integration behavior in `tests/behat/features/integration-tests.feature` when user-facing output changes
 4. Update docs:
    - `docs/contract-surface.md` when any contract guarantee changes
    - `README.md` when API usage or output text changes
@@ -44,14 +44,14 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
 
 ## Validation Commands
 
-- `composer test` (runs PHPUnit + Behat)
-- `composer static` (runs coding standards and Composer metadata checks)
-- `composer fast` (runs `test` + `static`; no dependency audit)
+- `composer check:test` (runs PHPUnit + Behat)
+- `composer check:static` (runs coding standards and Composer metadata checks)
+- `composer check:fast` (runs `check:test` + `check:static`; no dependency audit)
 
 Use targeted checks only when narrowing scope:
 
-- `composer phpunit`
-- `composer behat`
+- `composer check:phpunit`
+- `composer check:behat`
 
 If running a subset, state what was not run and why.
 

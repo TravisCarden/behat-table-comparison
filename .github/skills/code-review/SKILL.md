@@ -8,8 +8,8 @@ description: "Review PHP/Behat changes for correctness, regressions, maintainabi
 Use for line-level or PR-level review of concrete changes in this package:
 
 - library code under `src/BehatTableComparison/`
-- PHPUnit tests under `tests/`
-- Behat scenarios/contexts under `features/`
+- PHPUnit tests under `tests/unit/` (and `tests/integration/` if present)
+- Behat scenarios/contexts under `tests/behat/` and `examples/`
 - AI customization assets under `.github/`
 
 Default for prompts like "review this code", "is this good", or "check for regressions".
@@ -54,14 +54,14 @@ Check for:
 - Unnecessary complexity (dead code, duplication, noisy defensive paths, low-value boilerplate).
 - Test coverage gaps and fragile assertions.
 - Documentation drift and low-signal docs.
-- Contract/signature drift across `src`, `tests`, `features`, and `README.md`.
+- Contract/signature drift across `src`, `tests/unit`, `tests/behat`, `examples`, and `README.md`.
 - Lean scope: smallest change that solves the problem.
 
 For this repository specifically:
 
 - Confirm compatibility with PHP `^7.3 || ^8.0`.
 - Verify fluent API methods still return `$this` where expected.
-- When assertion message output changes, require matching updates to `README.md` and integration expectations in `features/integration-tests.feature`.
+- When assertion message output changes, require matching updates to `README.md` and integration expectations in `tests/behat/features/integration-tests.feature`.
 - Treat `docs/contract-surface.md` as the contract source of truth and flag any drift from implementation/tests/docs.
 
 ## Design Quality Checks (Required In `deep` Mode)
@@ -90,9 +90,9 @@ When behavior changes, verify these are aligned:
 
 - `docs/contract-surface.md`.
 - `README.md` usage and output-spec sections.
-- feature examples in `features/examples.feature`.
-- integration expectations in `features/integration-tests.feature`.
-- PHPUnit expectations in `tests/BehatTableComparison/`.
+- feature examples in `examples/features/examples.feature`.
+- integration expectations in `tests/behat/features/integration-tests.feature`.
+- PHPUnit expectations in `tests/unit/BehatTableComparison/`.
 
 Also flag low-signal docs (obvious boilerplate, duplicated text, non-actionable wording).
 
@@ -133,8 +133,8 @@ When running in `deep` mode, append:
 - `Contract classification` (single value with one-line rationale)
 - `Evidence checked` (files reviewed for behavior/contract/docs/tests):
    - code (`src/BehatTableComparison/*.php`)
-   - docs/examples (`docs/contract-surface.md`, `README.md`, `features/*.feature`)
-   - tests (`tests/BehatTableComparison/*.php`, `features/bootstrap/*.php`)
+   - docs/examples (`docs/contract-surface.md`, `README.md`, `examples/features/*.feature`)
+   - tests (`tests/unit/BehatTableComparison/*.php`, `tests/behat/bootstrap/*.php`)
 
 Before finalizing any review, include:
 
