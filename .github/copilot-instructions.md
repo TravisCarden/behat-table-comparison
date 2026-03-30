@@ -18,6 +18,7 @@ This repository is a small PHP library, not an application service. Optimize for
 - Preserve fluent API behavior on `TableEqualityAssertion` setters (`return $this`).
 - Keep behavior changes minimal and explicit; do not silently rename labels or message sections.
 - Follow existing PSR-2 style and current naming conventions in the file being edited.
+- Ensure every non-automated file ends with a trailing linebreak (for example, exclude generated lockfiles like `composer.lock`).
 
 ## Change Discipline
 

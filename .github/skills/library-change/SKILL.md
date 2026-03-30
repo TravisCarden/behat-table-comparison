@@ -25,6 +25,7 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
 - Keep fluent API setters fluent (`return $this`).
 - Follow existing PSR-2 formatting and naming style in touched files.
 - Do not edit `vendor/`.
+- Ensure every non-automated file ends with a trailing linebreak (for example, generated lockfiles like `composer.lock` are excluded).
 
 ## Workflow
 
