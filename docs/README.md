@@ -14,7 +14,7 @@ Install the library via [Composer](https://getcomposer.org/):
 composer require --dev traviscarden/behat-table-comparison
 ```
 
-Then use the [`TableEqualityAssertion`](src/BehatTableComparison/TableEqualityAssertion.php) class in your [`FeatureContext` class](http://docs.behat.org/en/v2.5/guides/4.context.html):
+Then use the [`TableEqualityAssertion`](../src/BehatTableComparison/TableEqualityAssertion.php) class in your [`FeatureContext` class](http://docs.behat.org/en/v2.5/guides/4.context.html):
 
 ```php
 <?php
@@ -60,7 +60,7 @@ class FeatureContext implements Context
 
 Output is like the following:
 
-![Example Output](resources/example-output.gif)
+![Example Output](example-output.gif)
 
 ## Error Message Specification
 
@@ -106,7 +106,7 @@ All user-facing section labels are configurable via defaults plus getter/setter 
 
 ## Examples
 
-See [`features/bootstrap/FeatureContext.php`](features/bootstrap/FeatureContext.php) and [`features/examples.feature`](features/examples.feature) for more examples.
+See [`features/bootstrap/FeatureContext.php`](../features/bootstrap/FeatureContext.php) and [`features/examples.feature`](../features/examples.feature) for more examples.
 
 ## Contribution
 
