@@ -1,2 +1,3 @@
-/tests/.phpunit.result.cache
+/var/*
+!/var/.gitkeep
 /vendor/
