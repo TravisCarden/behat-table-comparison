@@ -34,10 +34,10 @@ jobs:
                     composer-options: "--no-cache"
 
             -   name: "Run Tests"
-                run: composer test
+                run: composer check:test
 
             -   name: "Run Static Analysis"
-                run: composer static
+                run: composer check:static
 
             -   name: "Send coverage data to Coveralls.io"
                 if: "matrix.php == '7.4'" # Limit coverage data to one PHP version.

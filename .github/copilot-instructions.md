@@ -33,14 +33,14 @@ This repository is a small PHP library, not an application service. Optimize for
 
 Prefer these commands after non-trivial edits:
 
-- `composer test`
-- `composer static`
-- `composer fast`
+- `composer check:test`
+- `composer check:static`
+- `composer check:fast`
 
 Use targeted checks only when narrowing scope for speed:
 
-- `composer phpunit`
-- `composer behat`
+- `composer check:phpunit`
+- `composer check:behat`
 
 If running a narrower check for speed, state what was not run.
 

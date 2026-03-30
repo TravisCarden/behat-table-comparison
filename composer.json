@@ -36,8 +36,8 @@
         "sort-packages": true
     },
     "scripts": {
-        "all": [
-            "@fast",
+        "check:all": [
+            "@check:fast",
             "composer audit"
         ],
         "check:behat": [
@@ -46,37 +46,39 @@
         ],
         "check:behat-examples": "behat -c examples/behat.yml --no-interaction --format=progress",
         "check:behat-integration": "behat -c tests/behat.yml --no-interaction --format=progress",
-        "fast": [
-            "@test",
-            "@static"
+        "check:fast": [
+            "@check:test",
+            "@check:static"
         ],
-        "phpcbf": "phpcbf",
-        "phpcs": "phpcs -s",
-        "phpunit": "phpunit",
-        "static": [
-            "@phpcs",
+        "check:phpcbf": "phpcbf",
+        "check:phpcs": "phpcs -s",
+        "check:phpunit": "phpunit",
+        "check:static": [
+            "@check:phpcs",
             "composer validate",
             "composer normalize --dry-run"
         ],
-        "test": [
-            "@phpunit",
-            "@behat"
+        "check:test": [
+            "@check:phpunit",
+            "@check:behat"
         ]
     },
     "scripts-descriptions": {
-        "all": "Runs fast checks plus dependency audit (audit may make HTTP requests)",
-        "behat": "Runs Behat integration tests",
+        "check:all": "Runs fast checks plus dependency audit (audit may make HTTP requests)",
         "check:behat": "Runs Behat integration tests and executable examples",
         "check:behat-examples": "Runs Behat executable examples",
         "check:behat-integration": "Runs Behat integration tests",
-        "fast": "Runs all tests and static analysis tools (no dependency audit)",
-        "phpcbf": "Automatically fixes standards violations where possible",
-        "phpcs": "Checks code for standards compliance",
-        "phpunit": "Runs automated tests",
-        "static": "Runs all static analysis tools",
-        "test": "Runs all tests"
+        "check:fast": "Runs all tests and static analysis tools (no dependency audit)",
+        "check:phpcbf": "Automatically fixes standards violations where possible",
+        "check:phpcs": "Checks code for standards compliance",
+        "check:phpunit": "Runs automated tests",
+        "check:static": "Runs all static analysis tools",
+        "check:test": "Runs all tests"
     },
     "scripts-aliases": {
+        "check:all": [
+            "all"
+        ],
         "check:behat": [
             "behat"
         ],
@@ -88,12 +90,26 @@
             "behat-integration",
             "integration"
         ],
-        "phpcbf": [
+        "check:fast": [
+            "fast"
+        ],
+        "check:phpcbf": [
+            "phpcbf",
             "cbf",
             "fix"
         ],
-        "phpcs": [
+        "check:phpcs": [
+            "phpcs",
             "cs"
+        ],
+        "check:phpunit": [
+            "phpunit"
+        ],
+        "check:static": [
+            "static"
+        ],
+        "check:test": [
+            "test"
         ]
     }
 }
