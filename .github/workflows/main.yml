@@ -18,7 +18,7 @@ jobs:
         strategy:
             fail-fast: false
             matrix:
-                php: ["7.4", "8.0", "8.1"]
+                php: ["8.3", "8.4", "8.5"]
         steps:
             -   name: "Set up PHP"
                 uses: shivammathur/setup-php@v2 # https://github.com/marketplace/actions/setup-php-action
@@ -26,10 +26,10 @@ jobs:
                     php-version: "${{ matrix.php }}"
 
             -   name: "Checkout code"
-                uses: actions/checkout@v2 # https://github.com/marketplace/actions/checkout
+                uses: actions/checkout@v4 # https://github.com/marketplace/actions/checkout
 
             -   name: "Install dependencies"
-                uses: ramsey/composer-install@v1 # https://github.com/marketplace/actions/install-composer-dependencies
+                uses: ramsey/composer-install@v3 # https://github.com/marketplace/actions/install-composer-dependencies
                 with:
                     composer-options: "--no-cache"
 
@@ -38,11 +38,3 @@ jobs:
 
             -   name: "Run Static Analysis"
                 run: composer check:static
-
-            -   name: "Send coverage data to Coveralls.io"
-                if: "matrix.php == '7.4'" # Limit coverage data to one PHP version.
-                env:
-                    COVERALLS_REPO_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-                run: |
-                    composer global require php-coveralls/php-coveralls
-                    ~/.composer/vendor/bin/php-coveralls -v

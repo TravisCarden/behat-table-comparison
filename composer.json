@@ -14,13 +14,13 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
-        "behat/gherkin": "^4.4.4"
+        "php": "^8.3",
+        "behat/gherkin": "^4.11"
     },
     "require-dev": {
-        "behat/behat": "^3.3",
+        "behat/behat": "^3.16",
         "ergebnis/composer-normalize": "^2.50",
-        "phpunit/phpunit": "^9.5",
+        "phpunit/phpunit": "^12.0",
         "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
@@ -67,7 +67,17 @@
         "check:test": [
             "@check:phpunit",
             "@check:behat"
-        ]
+        ],
+        "docker:build": "docker compose build",
+        "docker:check-fast-83": "docker compose run --rm php83",
+        "docker:check-fast-84": "docker compose run --rm php84",
+        "docker:check-fast-85": "docker compose run --rm php85",
+        "docker:check-fast-all": [
+            "@docker:check-fast-83",
+            "@docker:check-fast-84",
+            "@docker:check-fast-85"
+        ],
+        "docker:down": "docker compose down"
     },
     "scripts-descriptions": {
         "check:all": "Runs fast checks plus dependency audit (audit may make HTTP requests)",
@@ -79,7 +89,13 @@
         "check:phpcs": "Checks code for standards compliance",
         "check:phpunit": "Runs automated tests",
         "check:static": "Runs all static analysis tools",
-        "check:test": "Runs all tests"
+        "check:test": "Runs all tests",
+        "docker:build": "Builds the Docker images for all supported PHP versions",
+        "docker:check-fast-83": "Runs check:fast inside the PHP 8.3 Docker container",
+        "docker:check-fast-84": "Runs check:fast inside the PHP 8.4 Docker container",
+        "docker:check-fast-85": "Runs check:fast inside the PHP 8.5 Docker container",
+        "docker:check-fast-all": "Runs check:fast across all supported PHP versions via Docker",
+        "docker:down": "Stops and removes Docker containers and networks (images and volumes are preserved; no rebuild needed to resume)"
     },
     "scripts-aliases": {
         "check:all": [
@@ -116,6 +132,31 @@
         ],
         "check:test": [
             "test"
+        ],
+        "docker:build": [
+            "build"
+        ],
+        "docker:check-fast-83": [
+            "docker-fast-83",
+            "docker-83",
+            "83"
+        ],
+        "docker:check-fast-84": [
+            "docker-fast-84",
+            "docker-84",
+            "84"
+        ],
+        "docker:check-fast-85": [
+            "docker-fast-85",
+            "docker-85",
+            "85"
+        ],
+        "docker:check-fast-all": [
+            "docker-fast-all",
+            "docker-fast"
+        ],
+        "docker:down": [
+            "down"
         ]
     }
 }
