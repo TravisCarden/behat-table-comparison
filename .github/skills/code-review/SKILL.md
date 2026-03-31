@@ -59,7 +59,7 @@ Check for:
 
 For this repository specifically:
 
-- Confirm compatibility with PHP `^7.3 || ^8.0`.
+- Confirm compatibility with PHP `^8.3` (write to the floor; do not use features from PHP 8.4+).
 - Verify fluent API methods still return `$this` where expected.
 - When assertion message output changes, require matching updates to `README.md` and integration expectations in `tests/behat/features/integration-tests.feature`.
 - Treat `docs/contract-surface.md` as the contract source of truth and flag any drift from implementation/tests/docs.
@@ -71,6 +71,25 @@ For this repository specifically:
 - Contract change classification: `none`, `additive`, `behavior-changing`, or `breaking`.
 - Backward compatibility and migration safety for package consumers.
 - Operability impact for diagnostics (message readability and actionable output).
+
+## Validation Commands
+
+Prefer this command after non-trivial edits to validate across all supported PHP versions:
+
+- `composer docker:check-fast-all`
+
+Use local (single-version) checks for rapid iteration:
+
+- `composer check:test`
+- `composer check:static`
+- `composer check:fast`
+
+Use targeted checks only when narrowing scope:
+
+- `composer check:phpunit`
+- `composer check:behat`
+
+If running a subset, state what was not run.
 
 ## Clarifying Questions Rule
 
