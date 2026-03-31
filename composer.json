@@ -25,13 +25,14 @@
     },
     "autoload": {
         "psr-4": {
-            "TravisCarden\\BehatTableComparison\\": "src/BehatTableComparison/"
+            "TravisCarden\\BehatTableComparison\\": "src/"
         }
     },
     "autoload-dev": {
         "psr-4": {
-            "TravisCarden\\BehatTableComparison\\Examples\\": "examples/",
-            "TravisCarden\\BehatTableComparison\\Tests\\": "tests/"
+            "TravisCarden\\BehatTableComparison\\Examples\\Bootstrap\\": "examples/bootstrap/",
+            "TravisCarden\\BehatTableComparison\\Tests\\Behat\\Bootstrap\\": "tests/behat/bootstrap/",
+            "TravisCarden\\BehatTableComparison\\Tests\\Unit\\": "tests/unit/"
         }
     },
     "config": {
