@@ -1,3 +1,5 @@
 /var/*
 !/var/.gitkeep
 /vendor/
+phpcs.xml
+phpunit.xml
