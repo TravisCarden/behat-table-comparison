@@ -1,6 +1,6 @@
 ---
 name: code-review
-description: "Review PHP/Behat changes for correctness, regressions, maintainability, and API/diagnostic contract risk. Use when asked to review code, tests, or Copilot customizations in this repository."
+scope: Review PHP/Behat changes for correctness, regressions, maintainability, and API/diagnostic contract risk. Defers to AGENTS.md for validation and review policy.
 ---
 
 ## Use This Skill
@@ -14,17 +14,11 @@ Use for line-level or PR-level review of concrete changes in this package:
 
 Default for prompts like "review this code", "is this good", or "check for regressions".
 
-## Review Depth Modes
-
-- `standard` (default): correctness, regressions, security, reliability, maintainability, tests, and docs drift.
-- `deep`: standard + architecture and contract quality (API symmetry, seams, migration safety, operability risk).
-
-Auto-upgrade to `deep` when changes are non-trivial (cross-file behavior, public API changes, output/diagnostic format changes, or multi-surface docs/tests drift).
-
 ## Do Not Use This Skill
 
 - Broad architecture ideation with no concrete patch.
 - Greenfield implementation unless review findings are explicitly requested.
+- Use AGENTS.md for agent-agnostic automation, validation, and review policy.
 
 ## Role
 
@@ -44,6 +38,17 @@ Apply this order when triaging findings:
 7. Style and consistency
 
 In `deep` mode, include design quality checks after reliability.
+
+## Validation and Review Policy
+
+Refer to [AGENTS.md](../../../../AGENTS.md) for canonical validation commands and review output expectations.
+
+## Review Depth Modes
+
+- `standard` (default): correctness, regressions, security, reliability, maintainability, tests, and docs drift.
+- `deep`: standard + architecture and contract quality (API symmetry, seams, migration safety, operability risk).
+
+Auto-upgrade to `deep` when changes are non-trivial (cross-file behavior, public API changes, output/diagnostic format changes, or multi-surface docs/tests drift).
 
 ## Core Checklist
 
@@ -71,25 +76,6 @@ For this repository specifically:
 - Contract change classification: `none`, `additive`, `behavior-changing`, or `breaking`.
 - Backward compatibility and migration safety for package consumers.
 - Operability impact for diagnostics (message readability and actionable output).
-
-## Validation Commands
-
-Prefer this command after non-trivial edits to validate across all supported PHP versions:
-
-- `composer docker:check-fast-all`
-
-Use local (single-version) checks for rapid iteration:
-
-- `composer check:test`
-- `composer check:static`
-- `composer check:fast`
-
-Use targeted checks only when narrowing scope:
-
-- `composer check:phpunit`
-- `composer check:behat`
-
-If running a subset, state what was not run.
 
 ## Clarifying Questions Rule
 
