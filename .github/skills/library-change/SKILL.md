@@ -20,12 +20,12 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
 
 ## Repository Constraints
 
-- PHP compatibility must remain `^7.3 || ^8.0`.
-- Avoid PHP features not available in 7.3.
+- PHP `^8.3` is the supported range; write to the **floor** of that range. Do not use language features or functions introduced after PHP 8.3 (for example, features from PHP 8.4+).
 - Keep fluent API setters fluent (`return $this`).
 - Follow existing PSR-2 formatting and naming style in touched files.
 - Do not edit `vendor/`.
 - Ensure every non-automated file ends with a trailing linebreak (for example, generated lockfiles like `composer.lock` are excluded).
+- When adding any new file or directory that is not part of the production library, tests, documentation, or examples, add it to `.gitattributes` with `export-ignore`.
 
 ## Workflow
 
@@ -44,6 +44,12 @@ Prefer minimal, explicit behavior changes and preserve backward compatibility by
 5. Run relevant validation commands.
 
 ## Validation Commands
+
+Prefer this command after non-trivial edits to validate across all supported PHP versions:
+
+- `composer docker:check-fast-all`
+
+Use local (single-version) checks for rapid iteration:
 
 - `composer check:test` (runs PHPUnit + Behat)
 - `composer check:static` (runs coding standards and Composer metadata checks)

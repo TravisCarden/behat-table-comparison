@@ -13,8 +13,7 @@ This repository is a small PHP library, not an application service. Optimize for
 
 ## Coding Rules
 
-- Maintain compatibility with PHP `^7.3 || ^8.0`.
-- Avoid features unavailable in PHP 7.3 (for example typed properties, union types, attributes, named arguments).
+- PHP `^8.3` is the supported range; write to the **floor** of that range. Do not use language features or functions introduced after PHP 8.3 (for example, features from PHP 8.4+).
 - Preserve fluent API behavior on `TableEqualityAssertion` setters (`return $this`).
 - Keep behavior changes minimal and explicit; do not silently rename labels or message sections.
 - Follow existing PSR-2 style and current naming conventions in the file being edited.
@@ -29,10 +28,15 @@ This repository is a small PHP library, not an application service. Optimize for
   - Behat integration coverage in `tests/behat/features/integration-tests.feature` when user-facing output changes
 - When error message text changes, also update `README.md` sections that document output labels and diagnostics.
 - If a change alters public methods, exception behavior, or diagnostics semantics, update `docs/contract-surface.md` in the same change.
+- When adding any new file or directory that is not part of the production library, tests, documentation, or examples (for example CI config, Docker files, editor config, build artifacts), add it to `.gitattributes` with `export-ignore` so it is excluded from Composer/GitHub package archives.
 
 ## Validation Commands
 
-Prefer these commands after non-trivial edits:
+Prefer this command after non-trivial edits to validate across all supported PHP versions:
+
+- `composer docker:check-fast-all`
+
+Use local (single-version) checks for rapid iteration:
 
 - `composer check:test`
 - `composer check:static`
