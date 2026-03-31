@@ -3,14 +3,13 @@
 namespace TravisCarden\BehatTableComparison\Tests\Unit;
 
 use Behat\Gherkin\Node\TableNode;
+use PHPUnit\Framework\Attributes\CoversClass;
+use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
-use TravisCarden\BehatTableComparison\Tests\AssertionError;
 use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 use TravisCarden\BehatTableComparison\UnequalTablesException;
 
-/**
- * @covers \TravisCarden\BehatTableComparison\TableEqualityAssertion
- */
+#[CoversClass(TableEqualityAssertion::class)]
 class TableEqualityAssertionTest extends TestCase
 {
 
@@ -110,9 +109,8 @@ class TableEqualityAssertionTest extends TestCase
 
     /**
      * Tests assertion with identical tables.
-     *
-     * @dataProvider providerTestAssertionWithIdenticalTables
      */
+    #[DataProvider('providerTestAssertionWithIdenticalTables')]
     public function testAssertionWithIdenticalTables($left, $right)
     {
         $left = new TableNode($left);
@@ -124,7 +122,7 @@ class TableEqualityAssertionTest extends TestCase
         self::assertTrue($actual);
     }
 
-    public function providerTestAssertionWithIdenticalTables()
+    public static function providerTestAssertionWithIdenticalTables()
     {
         return [
             'Identical with one single value row' => [[[1]], [[1]]],
@@ -138,9 +136,8 @@ class TableEqualityAssertionTest extends TestCase
 
     /**
      * Tests assertion with unequal tables.
-     *
-     * @dataProvider providerTestAssertionWithUnequalTables
      */
+    #[DataProvider('providerTestAssertionWithUnequalTables')]
     public function testAssertionWithUnequalTables($left, $right, $expected)
     {
         $this->expectException(UnequalTablesException::class);
@@ -158,7 +155,7 @@ class TableEqualityAssertionTest extends TestCase
         }
     }
 
-    public function providerTestAssertionWithUnequalTables()
+    public static function providerTestAssertionWithUnequalTables()
     {
         return [
             'Missing rows' => [
@@ -218,9 +215,8 @@ class TableEqualityAssertionTest extends TestCase
 
     /**
      * Tests assertion with complex differences while ignoring row order.
-     *
-     * @dataProvider providerTestAssertionWithComplexDifferencesIgnoringRowOrder
      */
+    #[DataProvider('providerTestAssertionWithComplexDifferencesIgnoringRowOrder')]
     public function testAssertionWithComplexDifferencesIgnoringRowOrder($left, $right, $expected)
     {
         $this->expectException(UnequalTablesException::class);
@@ -238,7 +234,7 @@ class TableEqualityAssertionTest extends TestCase
         }
     }
 
-    public function providerTestAssertionWithComplexDifferencesIgnoringRowOrder()
+    public static function providerTestAssertionWithComplexDifferencesIgnoringRowOrder()
     {
         return [
             'Duplicate rows on actual' => [
@@ -382,9 +378,8 @@ class TableEqualityAssertionTest extends TestCase
 
     /**
      * Tests assertion with custom label.
-     *
-     * @dataProvider providerTestAssertionWithCustomLabels
      */
+    #[DataProvider('providerTestAssertionWithCustomLabels')]
     public function testAssertionWithCustomLabels($method, $tables, $label, $prefix)
     {
         $this->expectException(UnequalTablesException::class);
@@ -395,12 +390,12 @@ class TableEqualityAssertionTest extends TestCase
         try {
             $assertion->assert();
         } catch (UnequalTablesException $e) {
-            self::assertStringStartsWith("${prefix} ${label}", $e->getMessage());
+            self::assertStringStartsWith("{$prefix} {$label}", $e->getMessage());
             throw $e;
         }
     }
 
-    public function providerTestAssertionWithCustomLabels()
+    public static function providerTestAssertionWithCustomLabels()
     {
         return [
             'Missing rows' => [
@@ -546,9 +541,8 @@ class TableEqualityAssertionTest extends TestCase
 
     /**
      * Tests assertion with content differences while respecting row order.
-     *
-     * @dataProvider providerTestAssertionWithContentDifferencesRespectingRowOrder
      */
+    #[DataProvider('providerTestAssertionWithContentDifferencesRespectingRowOrder')]
     public function testAssertionWithContentDifferencesRespectingRowOrder($left, $right, $expected)
     {
         $this->expectException(UnequalTablesException::class);
@@ -565,7 +559,7 @@ class TableEqualityAssertionTest extends TestCase
         }
     }
 
-    public function providerTestAssertionWithContentDifferencesRespectingRowOrder()
+    public static function providerTestAssertionWithContentDifferencesRespectingRowOrder()
     {
         return [
             'Content differences, same order' => [

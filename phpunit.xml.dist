@@ -1,17 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" bootstrap="tests/bootstrap.php" beStrictAboutOutputDuringTests="true" beStrictAboutTestsThatDoNotTestAnything="true" colors="true" cacheResultFile="var/.phpunit.result.cache" xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/9.3/phpunit.xsd">
-  <coverage processUncoveredFiles="true">
+<phpunit xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         bootstrap="tests/bootstrap.php"
+         beStrictAboutOutputDuringTests="true"
+         colors="true"
+         xsi:noNamespaceSchemaLocation="https://schema.phpunit.de/12.5/phpunit.xsd"
+         cacheDirectory="var"
+>
+  <source>
     <include>
-      <directory suffix=".php">src</directory>
+      <directory>src</directory>
     </include>
-    <report>
-      <clover outputFile="build/logs/clover.xml"/>
-    </report>
-  </coverage>
+  </source>
   <testsuites>
     <testsuite name="Tests">
       <directory>./tests/unit</directory>
     </testsuite>
   </testsuites>
-  <logging/>
 </phpunit>
