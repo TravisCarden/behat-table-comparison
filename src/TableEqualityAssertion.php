@@ -2,8 +2,9 @@
 
 namespace TravisCarden\BehatTableComparison;
 
+use Behat\Gherkin\Exception\NodeException;
 use Behat\Gherkin\Node\TableNode;
-use LogicException;
+use JsonException;
 
 /**
  * Asserts equality between two TableNodes.
@@ -201,20 +202,25 @@ final class TableEqualityAssertion
      * Performs the assertion.
      *
      * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
-     * @throws \LogicException
-     * @throws \Behat\Gherkin\Exception\NodeException
-     * @throws \JsonException
      */
     public function assert(): bool
     {
-        $this->assertHeader();
-        $this->assertBody();
+        try {
+            $this->assertHeader();
+            $this->assertBody();
+        } catch (NodeException|JsonException $e) {
+            throw new UnequalTablesException(
+                $e->getMessage(),
+                UnequalTablesException::STRUCTURAL_ERROR,
+                $e,
+            );
+        }
 
         return true;
     }
 
     /**
-     * @throws \LogicException
+     * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
      * @throws \Behat\Gherkin\Exception\NodeException
      */
     private function assertHeader(): void
@@ -238,7 +244,7 @@ final class TableEqualityAssertion
             (new TableNode([$actualHeader]))->getTableAsString(),
         ];
 
-        throw new LogicException(implode(PHP_EOL, $message));
+        throw new UnequalTablesException(implode(PHP_EOL, $message), UnequalTablesException::HEADER_MISMATCH);
     }
 
     /**
@@ -280,12 +286,12 @@ final class TableEqualityAssertion
             if ($sortedExpectedRows === $sortedActualRows) {
                 $message = $this->generateMessageForRowOrderMismatch($expectedBodyRows, $actualBodyRows);
 
-                throw new UnequalTablesException($message);
+                throw new UnequalTablesException($message, UnequalTablesException::ROW_ORDER_MISMATCH);
             }
 
             $message = $this->generateMessageForContentAndOrderDifferences($expectedBodyRows, $actualBodyRows);
 
-            throw new UnequalTablesException($message);
+            throw new UnequalTablesException($message, UnequalTablesException::CONTENT_MISMATCH);
         }
     }
 
@@ -302,7 +308,7 @@ final class TableEqualityAssertion
         if ($expectedBody->getRows() !== $actualBody->getRows()) {
             $message = $this->generateMessageForPostSortDifferences($expectedBody->getRows(), $actualBody->getRows());
 
-            throw new UnequalTablesException($message);
+            throw new UnequalTablesException($message, UnequalTablesException::CONTENT_MISMATCH);
         }
     }
 

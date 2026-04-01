@@ -63,7 +63,30 @@ Output is like the following:
 
 ## Error Message Specification
 
-When tables are unequal, the assertion throws a detailed error message with labeled sections.
+When tables are unequal, the assertion throws `UnequalTablesException` with a detailed
+diagnostic message. The integer error code, available via `getCode()`, identifies the
+category of failure:
+
+| Constant                                     | When thrown                                                            |
+|----------------------------------------------|------------------------------------------------------------------------|
+| `UnequalTablesException::HEADER_MISMATCH`    | The header row does not match the expected header.                     |
+| `UnequalTablesException::CONTENT_MISMATCH`   | Rows are missing, unexpected, or duplicated.                           |
+| `UnequalTablesException::ROW_ORDER_MISMATCH` | The same rows are present but in a different order.                    |
+| `UnequalTablesException::STRUCTURAL_ERROR`   | A structural failure occurred processing a table; see `getPrevious()`. |
+
+Consumers should use the named constants rather than bare integers. For example:
+
+```php
+try {
+    (new TableEqualityAssertion($expected, $actual))->assert();
+} catch (UnequalTablesException $e) {
+    match ($e->getCode()) {
+        UnequalTablesException::HEADER_MISMATCH    => /* handle header issue */,
+        UnequalTablesException::ROW_ORDER_MISMATCH => /* handle order issue */,
+        default                                    => /* handle content issue */,
+    };
+}
+```
 
 For a complete list of stable/public guarantees, see [Contract Surface](contract-surface.md).
 

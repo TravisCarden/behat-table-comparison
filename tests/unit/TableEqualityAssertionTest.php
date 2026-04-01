@@ -3,7 +3,6 @@
 namespace TravisCarden\BehatTableComparison\Tests\Unit;
 
 use Behat\Gherkin\Node\TableNode;
-use LogicException;
 use PHPUnit\Framework\Attributes\CoversClass;
 use PHPUnit\Framework\Attributes\DataProvider;
 use PHPUnit\Framework\TestCase;
@@ -108,6 +107,7 @@ final class TableEqualityAssertionTest extends TestCase
         } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, $expected);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::CONTENT_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -133,6 +133,7 @@ final class TableEqualityAssertionTest extends TestCase
         } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, $expected);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::CONTENT_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -173,6 +174,7 @@ final class TableEqualityAssertionTest extends TestCase
                 '| id3 | Label three |',
             ]);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::ROW_ORDER_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -192,6 +194,7 @@ final class TableEqualityAssertionTest extends TestCase
             $assertion->assert();
         } catch (UnequalTablesException $e) {
             self::assertStringStartsWith("{$prefix} {$label}", $e->getMessage());
+            self::assertSame(UnequalTablesException::CONTENT_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -212,6 +215,7 @@ final class TableEqualityAssertionTest extends TestCase
             $assertion->assert();
         } catch (UnequalTablesException $e) {
             self::assertStringStartsWith('*** Wrong order!', $e->getMessage());
+            self::assertSame(UnequalTablesException::ROW_ORDER_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -222,7 +226,7 @@ final class TableEqualityAssertionTest extends TestCase
      */
     public function testAssertionWithCustomHeaderLabels(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(UnequalTablesException::class);
         $rows = [['Label one', 'id1'], ['Label two', 'id2']];
         $left = new TableNode($rows);
         $right = $left;
@@ -233,9 +237,10 @@ final class TableEqualityAssertionTest extends TestCase
                 ->setExpectedHeaderLabel('Expected columns')
                 ->setGivenHeaderLabel('Actual columns')
                 ->assert();
-        } catch (LogicException $e) {
+        } catch (UnequalTablesException $e) {
             self::assertStringContainsString('--- Expected columns', $e->getMessage());
             self::assertStringContainsString('+++ Actual columns', $e->getMessage());
+            self::assertSame(UnequalTablesException::HEADER_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -259,6 +264,7 @@ final class TableEqualityAssertionTest extends TestCase
         } catch (UnequalTablesException $e) {
             self::assertStringContainsString('Expected sequence', $e->getMessage());
             self::assertStringContainsString('Actual sequence', $e->getMessage());
+            self::assertSame(UnequalTablesException::ROW_ORDER_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -286,7 +292,7 @@ final class TableEqualityAssertionTest extends TestCase
      */
     public function testAssertionWithHeaderMismatch(): void
     {
-        $this->expectException(LogicException::class);
+        $this->expectException(UnequalTablesException::class);
         $rows = [['Label one', 'id1'], ['Label two', 'id2']];
         $left = new TableNode($rows);
         $right = $left;
@@ -295,7 +301,7 @@ final class TableEqualityAssertionTest extends TestCase
             (new TableEqualityAssertion($left, $right))
                 ->expectHeader(['label', 'id'])
                 ->assert();
-        } catch (LogicException $e) {
+        } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, [
                 '--- Expected header',
                 '| label | id |',
@@ -303,6 +309,7 @@ final class TableEqualityAssertionTest extends TestCase
                 '| Label one | id1 |',
             ]);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::HEADER_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -354,6 +361,7 @@ final class TableEqualityAssertionTest extends TestCase
         } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, $expected);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::CONTENT_MISMATCH, $e->getCode());
 
             throw $e;
         }
@@ -430,6 +438,7 @@ final class TableEqualityAssertionTest extends TestCase
                 '| 13 | thirteen |',
             ]);
             self::assertSame($expected, $e->getMessage());
+            self::assertSame(UnequalTablesException::CONTENT_MISMATCH, $e->getCode());
 
             throw $e;
         }

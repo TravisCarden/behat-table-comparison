@@ -19,15 +19,24 @@ The following are part of the public contract for `1.x`:
 - Constructor and public methods on `TableEqualityAssertion`.
 - Fluent setter behavior on `TableEqualityAssertion` (setters return `$this`).
 - Public constants on `TableEqualityAssertion` representing default labels.
+- Public constants on `UnequalTablesException` representing error codes.
 
 Any change to the above is at least `behavior-changing` and may be `breaking`.
 
 ## Exception Contract
 
-- Content/body inequality failures throw `UnequalTablesException`.
-- Header expectation failures currently throw `LogicException`.
+All assertion failures from `assert()` throw `UnequalTablesException`. The integer error code,
+available via `getCode()`, identifies the category of failure:
 
-This split is currently part of observed behavior and must be treated as contract unless intentionally changed and documented as `breaking`.
+| Constant                                     | Value | When thrown                                                                                                     |
+|----------------------------------------------|-------|-----------------------------------------------------------------------------------------------------------------|
+| `UnequalTablesException::HEADER_MISMATCH`    | `1`   | The header row does not match the expected header.                                                              |
+| `UnequalTablesException::CONTENT_MISMATCH`   | `2`   | Rows are missing, unexpected, or duplicated.                                                                    |
+| `UnequalTablesException::ROW_ORDER_MISMATCH` | `3`   | The same rows are present but in a different order.                                                             |
+| `UnequalTablesException::STRUCTURAL_ERROR`   | `4`   | A structural failure occurred processing a table node; the original exception is available via `getPrevious()`. |
+
+The constant names, integer values, and the single-exception-type guarantee are stable contract in `1.x`.
+Consumers should use the constants (not bare integers) for clarity and forward-compatibility.
 
 ## Diagnostics Contract
 
@@ -92,8 +101,9 @@ Use this checklist for release candidates and release PRs.
   - public classes/methods/signatures/constants unchanged, or changes are documented.
   - fluent setter methods still return `$this`.
 - Exception behavior audit completed:
-  - content/body mismatch still throws `UnequalTablesException`.
-  - header mismatch behavior is unchanged or intentionally migrated with notes.
+  - all assertion failures throw `UnequalTablesException` (no low-level exceptions leak).
+  - error code constants (`HEADER_MISMATCH`, `CONTENT_MISMATCH`, `ROW_ORDER_MISMATCH`, `STRUCTURAL_ERROR`) are assigned correctly.
+  - `STRUCTURAL_ERROR` wraps original exception via `getPrevious()`.
 - Diagnostics audit completed:
   - section labels/semantics/order reviewed against README and integration expectations.
   - duplicate count annotation semantics preserved.
