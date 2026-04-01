@@ -33,8 +33,21 @@ jobs:
                 with:
                     composer-options: "--no-cache"
 
-            -   name: "Run Tests"
-                run: composer check:test
+            -   name: "Run PHPUnit"
+                run: php ./vendor/bin/phpunit
+
+            -   name: "Run Behat (PHP floor)"
+                if: matrix.php == '8.3'
+                run: |
+                    php ./vendor/bin/behat -c tests/behat.yml --no-interaction --format=progress
+                    php ./vendor/bin/behat -c examples/behat.yml --no-interaction --format=progress
 
             -   name: "Run Static Analysis"
-                run: composer check:static
+                if: matrix.php == '8.3'
+                run: |
+                    php ./vendor/bin/phpcs -s
+                    php ./vendor/bin/phpstan analyze
+                    php ./vendor/bin/rector --dry-run
+                    composer validate
+                    composer normalize --dry-run
+                    composer dump-autoload --optimize --dry-run --strict-psr --strict-ambiguous

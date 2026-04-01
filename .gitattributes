@@ -10,6 +10,7 @@
 /composer.lock        export-ignore
 /CONTRIBUTING.md      export-ignore
 /docker-compose.yml   export-ignore
+/grumphp.yml.dist    export-ignore
 /phpcs.xml.dist       export-ignore
 /phpstan.neon.dist    export-ignore
 /phpunit.xml.dist     export-ignore

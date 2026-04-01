@@ -10,7 +10,7 @@ This directory contains all test suites for the library:
   - Features: `tests/behat/features/`
   - Contexts: `tests/behat/bootstrap/`
   - Config: `tests/behat.yml`
-  - Run: `composer check:behat-integration`
+  - Run: `composer check:behat` (Docker PHP 8.3 floor)
 
 - **`integration/`**: Reserved for future integration tests (e.g., cross-library or system-level tests).
   - Currently empty; add test code here as needed.
@@ -20,13 +20,13 @@ This directory contains all test suites for the library:
 Run all tests:
 ```bash
 composer check:test          # PHPUnit + Behat
-composer check:fast          # All tests + static analysis (no audit)
+composer check:fast          # All tests + static analysis
 ```
 
 Run targeted tests:
 ```bash
 composer check:phpunit       # PHPUnit only
-composer check:behat-integration  # Behat self-tests only
+composer check:behat         # Behat self-tests only (Docker PHP 8.3 floor)
 ```
 
 ## Test Coverage and Alignment

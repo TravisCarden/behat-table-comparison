@@ -4,7 +4,7 @@
         "Read more about it at https://getcomposer.org/doc/01-basic-usage.md#installing-dependencies",
         "This file is @generated automatically"
     ],
-    "content-hash": "d45a87f21bfe7334b506dca9f5d2e0ec",
+    "content-hash": "321f8e2bd6f945e9977f2374200eea5f",
     "packages": [
         {
             "name": "behat/gherkin",
@@ -1338,6 +1338,65 @@
                 "source": "https://github.com/phar-io/version/tree/3.2.1"
             },
             "time": "2022-02-21T01:04:05+00:00"
+        },
+        {
+            "name": "phpro/grumphp-shim",
+            "version": "v2.19.0",
+            "source": {
+                "type": "git",
+                "url": "https://github.com/phpro/grumphp-shim.git",
+                "reference": "4d08e4ef6a6b6d6ba641bce52faabaa9f200201c"
+            },
+            "dist": {
+                "type": "zip",
+                "url": "https://api.github.com/repos/phpro/grumphp-shim/zipball/4d08e4ef6a6b6d6ba641bce52faabaa9f200201c",
+                "reference": "4d08e4ef6a6b6d6ba641bce52faabaa9f200201c",
+                "shasum": ""
+            },
+            "require": {
+                "composer-plugin-api": "~2.0",
+                "ext-json": "*",
+                "php": "~8.2.0 || ~8.3.0 || ~8.4.0 || ~8.5.0"
+            },
+            "replace": {
+                "phpro/grumphp": "self.version"
+            },
+            "require-dev": {
+                "humbug/box": "^4.6"
+            },
+            "bin": [
+                "grumphp",
+                "grumphp.phar"
+            ],
+            "type": "composer-plugin",
+            "extra": {
+                "class": "GrumPHP\\Composer\\GrumPHPPlugin"
+            },
+            "autoload": {
+                "psr-4": {
+                    "GrumPHP\\": "src"
+                }
+            },
+            "notification-url": "https://packagist.org/downloads/",
+            "license": [
+                "MIT"
+            ],
+            "authors": [
+                {
+                    "name": "Toon Verwerft",
+                    "email": "toon.verwerft@phpro.be"
+                },
+                {
+                    "name": "Community",
+                    "homepage": "https://github.com/phpro/grumphp/graphs/contributors"
+                }
+            ],
+            "description": "GrumPHP Phar distribution",
+            "support": {
+                "issues": "https://github.com/phpro/grumphp-shim/issues",
+                "source": "https://github.com/phpro/grumphp-shim/tree/v2.19.0"
+            },
+            "time": "2026-02-03T06:29:24+00:00"
         },
         {
             "name": "phpstan/phpdoc-parser",
