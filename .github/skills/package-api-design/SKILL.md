@@ -93,7 +93,7 @@ behat-table-comparison
    - Whether PHP version constraints align with Drupal core recommendations
    - Whether dependency changes could cascade (especially behat/gherkin)
 
-3. **Implement minimally** in `src/BehatTableComparison/`:
+3. **Implement minimally** in `src/`:
    - Smallest change possible
    - Preserve existing behavior by default
 
@@ -110,4 +110,4 @@ Use AGENTS.md categories when describing impact: `none`, `additive`, `behavior-c
 
 ## Validation and Review Policy
 
-Refer to [AGENTS.md](../../../../AGENTS.md) for canonical validation commands and review output expectations.
+Refer to [AGENTS.md](../../../AGENTS.md) for canonical validation commands and review output expectations.

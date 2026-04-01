@@ -3,7 +3,7 @@
 This directory contains all test suites for the library:
 
 - **`unit/`**: PHPUnit unit tests covering library classes under `src/`.
-  - Path: `tests/unit/BehatTableComparison/`
+  - Path: `tests/unit/`
   - Run: `composer check:phpunit`
 
 - **`behat/`**: Behat self-test scenarios validating library behavior end-to-end.

@@ -4,8 +4,8 @@ This document provides agent-agnostic guidance for all automation, AI, and code 
 
 ## Project Shape
 
-- Main code: `src/BehatTableComparison/`
-- Unit tests: `tests/unit/BehatTableComparison/` (PHPUnit)
+- Main code: `src/`
+- Unit tests: `tests/unit/` (PHPUnit)
 - Self-test scenarios: `tests/behat/features/` and `tests/behat/bootstrap/` (Behat)
 - Runnable examples: `examples/features/` and `examples/bootstrap/`
 - Public API center: `TableEqualityAssertion` and `UnequalTablesException`
@@ -24,9 +24,9 @@ This document provides agent-agnostic guidance for all automation, AI, and code 
 - Do not modify `vendor/`, CI history badges, or unrelated project metadata unless explicitly requested.
 - Treat `docs/contract-surface.md` as authoritative for what is stable in `1.x`.
 - For behavior changes, update both:
-  - PHPUnit tests in `tests/unit/BehatTableComparison/`
+  - PHPUnit tests in `tests/unit/`
   - Behat integration coverage in `tests/behat/features/integration-tests.feature` when user-facing output changes
-- When error message text changes, also update `README.md` sections that document output labels and diagnostics.
+- When error message text changes, also update `docs/README.md` sections that document output labels and diagnostics.
 - If a change alters public methods, exception behavior, or diagnostics semantics, update `docs/contract-surface.md` in the same change.
 - When adding any new file or directory that is not part of the production library, tests, documentation, or examples (for example CI config, Docker files, editor config, build artifacts), add it to `.gitattributes` with `export-ignore` so it is excluded from Composer/GitHub package archives. **Always keep `.gitattributes` up-to-date when new files are added.**
 

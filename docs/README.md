@@ -13,7 +13,7 @@ Install the library via [Composer](https://getcomposer.org/):
 composer require --dev traviscarden/behat-table-comparison
 ```
 
-Then use the [`TableEqualityAssertion`](../src/BehatTableComparison/TableEqualityAssertion.php) class in your [`FeatureContext` class](http://docs.behat.org/en/v2.5/guides/4.context.html):
+Then use the [`TableEqualityAssertion`](../src/TableEqualityAssertion.php) class in your [`FeatureContext` class](http://docs.behat.org/en/v2.5/guides/4.context.html):
 
 ```php
 <?php

@@ -7,7 +7,7 @@ scope: Review PHP/Behat changes for correctness, regressions, maintainability, a
 
 Use for line-level or PR-level review of concrete changes in this package:
 
-- library code under `src/BehatTableComparison/`
+- library code under `src/`
 - PHPUnit tests under `tests/unit/` (and `tests/integration/` if present)
 - Behat scenarios/contexts under `tests/behat/` and `examples/`
 - AI customization assets under `.github/`
@@ -41,7 +41,7 @@ In `deep` mode, include design quality checks after reliability.
 
 ## Validation and Review Policy
 
-Refer to [AGENTS.md](../../../../AGENTS.md) for canonical validation commands and review output expectations.
+Refer to [AGENTS.md](../../../AGENTS.md) for canonical validation commands and review output expectations.
 
 ## Review Depth Modes
 
@@ -59,14 +59,14 @@ Check for:
 - Unnecessary complexity (dead code, duplication, noisy defensive paths, low-value boilerplate).
 - Test coverage gaps and fragile assertions.
 - Documentation drift and low-signal docs.
-- Contract/signature drift across `src`, `tests/unit`, `tests/behat`, `examples`, and `README.md`.
+- Contract/signature drift across `src`, `tests/unit`, `tests/behat`, `examples`, and `docs/README.md`.
 - Lean scope: smallest change that solves the problem.
 
 For this repository specifically:
 
 - Confirm compatibility with PHP `^8.3` (write to the floor; do not use features from PHP 8.4+).
 - Verify fluent API methods still return `$this` where expected.
-- When assertion message output changes, require matching updates to `README.md` and integration expectations in `tests/behat/features/integration-tests.feature`.
+- When assertion message output changes, require matching updates to `docs/README.md` and integration expectations in `tests/behat/features/integration-tests.feature`.
 - Treat `docs/contract-surface.md` as the contract source of truth and flag any drift from implementation/tests/docs.
 
 ## Design Quality Checks (Required In `deep` Mode)
@@ -94,10 +94,10 @@ Ask one focused clarifying question only when design intent ambiguity changes co
 When behavior changes, verify these are aligned:
 
 - `docs/contract-surface.md`.
-- `README.md` usage and output-spec sections.
+- `docs/README.md` usage and output-spec sections.
 - feature examples in `examples/features/examples.feature`.
 - integration expectations in `tests/behat/features/integration-tests.feature`.
-- PHPUnit expectations in `tests/unit/BehatTableComparison/`.
+- PHPUnit expectations in `tests/unit/`.
 
 Also flag low-signal docs (obvious boilerplate, duplicated text, non-actionable wording).
 
@@ -137,9 +137,9 @@ When running in `deep` mode, append:
 - `Symmetry and seam notes` (short bullets)
 - `Contract classification` (single value with one-line rationale)
 - `Evidence checked` (files reviewed for behavior/contract/docs/tests):
-   - code (`src/BehatTableComparison/*.php`)
-   - docs/examples (`docs/contract-surface.md`, `README.md`, `examples/features/*.feature`)
-   - tests (`tests/unit/BehatTableComparison/*.php`, `tests/behat/bootstrap/*.php`)
+   - code (`src/*.php`)
+   - docs/examples (`docs/contract-surface.md`, `docs/README.md`, `examples/features/*.feature`)
+   - tests (`tests/unit/*.php`, `tests/behat/bootstrap/*.php`)
 
 Before finalizing any review, include:
 

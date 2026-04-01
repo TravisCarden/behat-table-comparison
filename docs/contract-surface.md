@@ -40,7 +40,7 @@ For failing assertions, the diagnostics format is consumer-facing contract:
   - row-order mismatch
   - header mismatch
   - expected/actual order subheadings
-- Section labels and ordering semantics as documented in `README.md`.
+- Section labels and ordering semantics as documented in `docs/README.md`.
 - Meaning of duplicate-row count annotations (for example, `(appears N time/times, expected M)`).
 
 Notes:
@@ -78,8 +78,8 @@ Use these labels when reporting changes:
 
 When contract behavior changes:
 
-- Update `README.md` contract-facing sections.
-- Update PHPUnit coverage in `tests/unit/BehatTableComparison/`.
+- Update `docs/README.md` contract-facing sections.
+- Update PHPUnit coverage in `tests/unit/`.
 - Update Behat integration coverage in `tests/behat/features/integration-tests.feature` when user-facing diagnostics change.
 - Call out change classification and migration notes in release notes.
 
@@ -101,7 +101,7 @@ Use this checklist for release candidates and release PRs.
   - unit tests cover changed behavior.
   - Behat integration scenarios cover user-visible diagnostics where applicable.
 - Documentation sync completed:
-  - `README.md` matches current behavior and labels.
+  - `docs/README.md` matches current behavior and labels.
   - this file reflects any updated guarantees.
 - Runtime support policy confirmed:
   - PHP and dependency constraints in `composer.json` match release notes.
