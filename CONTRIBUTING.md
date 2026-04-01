@@ -77,6 +77,7 @@ composer install
 composer fast     # tests + static analysis
 composer test     # tests only
 composer static   # static analysis only
+composer fix-all  # apply Rector and PHPCBF fixes
 ```
 
 See `composer list` for all available scripts and their aliases.
@@ -86,7 +87,7 @@ See `composer list` for all available scripts and their aliases.
 ## Code standards
 
 - Write to the **PHP 8.3 floor**. Do not use language features or functions introduced after PHP 8.3, even though CI also runs on 8.4 and 8.5.
-- Follow the PSR-2 coding standard used throughout the project. Run `composer cs` to check, `composer fix` to auto-correct.
+- Follow the project's coding standards and static analysis toolchain. Run `composer check:static` to verify; run `composer fix:all` to autocorrect where possible.
 - Every non-generated file must end with a trailing newline.
 
 ## Keeping package artifacts clean

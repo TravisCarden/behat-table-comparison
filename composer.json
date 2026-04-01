@@ -19,8 +19,13 @@
     },
     "require-dev": {
         "behat/behat": "^3.16",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
         "ergebnis/composer-normalize": "^2.50",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-strict-rules": "^2.0",
         "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.1",
+        "slevomat/coding-standard": "^8.13",
         "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
@@ -44,7 +49,8 @@
     },
     "scripts": {
         "check:all": [
-            "@check:fast",
+            "@docker:test-all",
+            "@check:static",
             "composer audit"
         ],
         "check:behat": [
@@ -57,28 +63,38 @@
             "@check:test",
             "@check:static"
         ],
-        "check:phpcbf": "phpcbf",
         "check:phpcs": "phpcs -s",
+        "check:phpstan": "phpstan analyze",
         "check:phpunit": "phpunit",
+        "check:rector": "rector --dry-run",
         "check:static": [
             "@check:phpcs",
+            "@check:phpstan",
+            "@check:rector",
             "composer validate",
-            "composer normalize --dry-run"
+            "composer normalize --dry-run",
+            "composer dump-autoload --optimize --dry-run --strict-psr --strict-ambiguous"
         ],
         "check:test": [
             "@check:phpunit",
             "@check:behat"
         ],
         "docker:build": "docker compose build",
-        "docker:check-fast-83": "docker compose run --rm php83",
-        "docker:check-fast-84": "docker compose run --rm php84",
-        "docker:check-fast-85": "docker compose run --rm php85",
-        "docker:check-fast-all": [
-            "@docker:check-fast-83",
-            "@docker:check-fast-84",
-            "@docker:check-fast-85"
+        "docker:down": "docker compose down",
+        "docker:test-83": "docker compose run --rm php83 composer check:test",
+        "docker:test-84": "docker compose run --rm php84 composer check:test",
+        "docker:test-85": "docker compose run --rm php85 composer check:test",
+        "docker:test-all": [
+            "@docker:test-83",
+            "@docker:test-84",
+            "@docker:test-85"
         ],
-        "docker:down": "docker compose down"
+        "fix:all": [
+            "@fix:rector",
+            "@fix:phpcbf"
+        ],
+        "fix:phpcbf": "phpcbf",
+        "fix:rector": "rector"
     },
     "scripts-descriptions": {
         "check:all": "Runs fast checks plus dependency audit (audit may make HTTP requests)",
@@ -86,17 +102,21 @@
         "check:behat-examples": "Runs Behat executable examples",
         "check:behat-integration": "Runs Behat integration tests",
         "check:fast": "Runs all tests and static analysis tools (no dependency audit)",
-        "check:phpcbf": "Automatically fixes standards violations where possible",
         "check:phpcs": "Checks code for standards compliance",
+        "check:phpstan": "Analyzes code to find bugs",
         "check:phpunit": "Runs automated tests",
+        "check:rector": "Validates that Rector would make no further changes",
         "check:static": "Runs all static analysis tools",
         "check:test": "Runs all tests",
         "docker:build": "Builds the Docker images for all supported PHP versions",
-        "docker:check-fast-83": "Runs check:fast inside the PHP 8.3 Docker container",
-        "docker:check-fast-84": "Runs check:fast inside the PHP 8.4 Docker container",
-        "docker:check-fast-85": "Runs check:fast inside the PHP 8.5 Docker container",
-        "docker:check-fast-all": "Runs check:fast across all supported PHP versions via Docker",
-        "docker:down": "Stops and removes Docker containers and networks (images and volumes are preserved; no rebuild needed to resume)"
+        "docker:down": "Stops and removes Docker containers and networks (images and volumes are preserved; no rebuild needed to resume)",
+        "docker:test-83": "Runs tests (PHPUnit and Behat) inside the PHP 8.3 Docker container (no static analysis)",
+        "docker:test-84": "Runs tests (PHPUnit and Behat) inside the PHP 8.4 Docker container (no static analysis)",
+        "docker:test-85": "Runs tests (PHPUnit and Behat) inside the PHP 8.5 Docker container (no static analysis)",
+        "docker:test-all": "Runs tests (PHPUnit and Behat) across all supported PHP versions via Docker (no static analysis)",
+        "fix:all": "Runs all code fixers",
+        "fix:phpcbf": "Automatically fixes standards violations where possible",
+        "fix:rector": "Applies Rector refactorings"
     },
     "scripts-aliases": {
         "check:all": [
@@ -116,17 +136,20 @@
         "check:fast": [
             "fast"
         ],
-        "check:phpcbf": [
-            "phpcbf",
-            "cbf",
-            "fix"
-        ],
         "check:phpcs": [
             "phpcs",
             "cs"
         ],
+        "check:phpstan": [
+            "phpstan",
+            "stan",
+            "analyze"
+        ],
         "check:phpunit": [
             "phpunit"
+        ],
+        "check:rector": [
+            "check-rector"
         ],
         "check:static": [
             "static"
@@ -137,27 +160,38 @@
         "docker:build": [
             "build"
         ],
-        "docker:check-fast-83": [
-            "docker-fast-83",
+        "docker:down": [
+            "down"
+        ],
+        "docker:test-83": [
+            "docker-test-83",
             "docker-83",
             "83"
         ],
-        "docker:check-fast-84": [
-            "docker-fast-84",
+        "docker:test-84": [
+            "docker-test-84",
             "docker-84",
             "84"
         ],
-        "docker:check-fast-85": [
-            "docker-fast-85",
+        "docker:test-85": [
+            "docker-test-85",
             "docker-85",
             "85"
         ],
-        "docker:check-fast-all": [
-            "docker-fast-all",
-            "docker-fast"
+        "docker:test-all": [
+            "docker-test-all",
+            "docker-test"
         ],
-        "docker:down": [
-            "down"
+        "fix:all": [
+            "fix-all",
+            "fix"
+        ],
+        "fix:phpcbf": [
+            "phpcbf",
+            "cbf"
+        ],
+        "fix:rector": [
+            "rector"
         ]
     }
 }

@@ -1,0 +1,17 @@
+# https://phpstan.org/config-reference
+parameters:
+    exceptions:
+        check:
+            missingCheckedExceptionInThrows: true
+            tooWideThrowType: true
+    level: max
+    tmpDir: var/phpstan
+    paths:
+        - examples
+        - rector.php
+        - src
+    treatPhpDocTypesAsCertain: false
+    ignoreErrors:
+        -
+            identifier: missingType.checkedException
+            path: examples/bootstrap/FeatureContext.php
