@@ -1,10 +1,12 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TravisCarden\BehatTableComparison;
+
+use RuntimeException;
 
 /**
  * An exception for table inequalities.
  */
-class UnequalTablesException extends \RuntimeException
+final class UnequalTablesException extends RuntimeException
 {
 }

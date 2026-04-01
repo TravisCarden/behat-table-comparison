@@ -1,461 +1,366 @@
-<?php
+<?php declare(strict_types=1);
 
 namespace TravisCarden\BehatTableComparison;
 
 use Behat\Gherkin\Node\TableNode;
+use LogicException;
 
 /**
  * Asserts equality between two TableNodes.
  */
-class TableEqualityAssertion
+final class TableEqualityAssertion
 {
+    private const string DEFAULT_MISSING_ROWS_LABEL = 'Missing rows';
 
-    const DEFAULT_MISSING_ROWS_LABEL = 'Missing rows';
+    private const string DEFAULT_UNEXPECTED_ROWS_LABEL = 'Unexpected rows';
 
-    const DEFAULT_UNEXPECTED_ROWS_LABEL = 'Unexpected rows';
+    private const string DEFAULT_DUPLICATE_ROWS_LABEL = 'Duplicate rows';
 
-    const DEFAULT_DUPLICATE_ROWS_LABEL = 'Duplicate rows';
+    private const string DEFAULT_ROW_ORDER_MISMATCH_LABEL = 'Row order mismatch';
 
-    const DEFAULT_ROW_ORDER_MISMATCH_LABEL = 'Row order mismatch';
+    private const string DEFAULT_EXPECTED_HEADER_LABEL = 'Expected header';
 
-    const DEFAULT_EXPECTED_HEADER_LABEL = 'Expected header';
+    private const string DEFAULT_GIVEN_HEADER_LABEL = 'Given header';
 
-    const DEFAULT_GIVEN_HEADER_LABEL = 'Given header';
+    private const string DEFAULT_EXPECTED_ORDER_LABEL = 'Expected order';
 
-    const DEFAULT_EXPECTED_ORDER_LABEL = 'Expected order';
+    private const string DEFAULT_ACTUAL_ORDER_LABEL = 'Actual order';
 
-    const DEFAULT_ACTUAL_ORDER_LABEL = 'Actual order';
+    private string $missingRowsLabel = self::DEFAULT_MISSING_ROWS_LABEL;
 
-    /**
-     * @var \Behat\Gherkin\Node\TableNode
-     */
-    protected $expected;
+    private string $unexpectedRowsLabel = self::DEFAULT_UNEXPECTED_ROWS_LABEL;
 
-    /**
-     * @var \Behat\Gherkin\Node\TableNode
-     */
-    protected $actual;
+    private string $duplicateRowsLabel = self::DEFAULT_DUPLICATE_ROWS_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $missingRowsLabel = self::DEFAULT_MISSING_ROWS_LABEL;
+    private string $rowOrderMismatchLabel = self::DEFAULT_ROW_ORDER_MISMATCH_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $unexpectedRowsLabel = self::DEFAULT_UNEXPECTED_ROWS_LABEL;
+    private string $expectedHeaderLabel = self::DEFAULT_EXPECTED_HEADER_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $duplicateRowsLabel = self::DEFAULT_DUPLICATE_ROWS_LABEL;
+    private string $givenHeaderLabel = self::DEFAULT_GIVEN_HEADER_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $rowOrderMismatchLabel = self::DEFAULT_ROW_ORDER_MISMATCH_LABEL;
+    private string $expectedOrderLabel = self::DEFAULT_EXPECTED_ORDER_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $expectedHeaderLabel = self::DEFAULT_EXPECTED_HEADER_LABEL;
+    private string $actualOrderLabel = self::DEFAULT_ACTUAL_ORDER_LABEL;
 
-    /**
-     * @var string
-     */
-    protected $givenHeaderLabel = self::DEFAULT_GIVEN_HEADER_LABEL;
+    /** @var array<string> */
+    private array $expectedHeader = [];
 
-    /**
-     * @var string
-     */
-    protected $expectedOrderLabel = self::DEFAULT_EXPECTED_ORDER_LABEL;
+    private bool $respectRowOrder = true;
 
-    /**
-     * @var string
-     */
-    protected $actualOrderLabel = self::DEFAULT_ACTUAL_ORDER_LABEL;
-
-    /**
-     * @var array
-     */
-    protected $expectedHeader = [];
-
-    /**
-     * @var bool
-     */
-    protected $respectRowOrder = true;
-
-    /**
-     * TableEqualityAssertion constructor.
-     *
-     * @param \Behat\Gherkin\Node\TableNode $expected
-     * @param \Behat\Gherkin\Node\TableNode $actual
-     */
-    public function __construct(TableNode $expected, TableNode $actual)
+    public function __construct(private readonly TableNode $expected, private readonly TableNode $actual)
     {
-        $this->expected = $expected;
-        $this->actual = $actual;
     }
 
-    /**
-     * @return \Behat\Gherkin\Node\TableNode
-     */
-    public function getExpected()
+    public function getExpected(): TableNode
     {
         return $this->expected;
     }
 
-    /**
-     * @return \Behat\Gherkin\Node\TableNode
-     */
-    public function getActual()
+    public function getActual(): TableNode
     {
         return $this->actual;
     }
 
-    /**
-     * @return string
-     */
-    public function getMissingRowsLabel()
+    public function getMissingRowsLabel(): string
     {
         return $this->missingRowsLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setMissingRowsLabel(string $label)
+    public function setMissingRowsLabel(string $label): static
     {
         $this->missingRowsLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getUnexpectedRowsLabel()
+    public function getUnexpectedRowsLabel(): string
     {
         return $this->unexpectedRowsLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setUnexpectedRowsLabel(string $label)
+    public function setUnexpectedRowsLabel(string $label): static
     {
         $this->unexpectedRowsLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getDuplicateRowsLabel()
+    public function getDuplicateRowsLabel(): string
     {
         return $this->duplicateRowsLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setDuplicateRowsLabel(string $label)
+    public function setDuplicateRowsLabel(string $label): static
     {
         $this->duplicateRowsLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getRowOrderMismatchLabel()
+    public function getRowOrderMismatchLabel(): string
     {
         return $this->rowOrderMismatchLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setRowOrderMismatchLabel(string $label)
+    public function setRowOrderMismatchLabel(string $label): static
     {
         $this->rowOrderMismatchLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExpectedHeaderLabel()
+    public function getExpectedHeaderLabel(): string
     {
         return $this->expectedHeaderLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setExpectedHeaderLabel(string $label)
+    public function setExpectedHeaderLabel(string $label): static
     {
         $this->expectedHeaderLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getGivenHeaderLabel()
+    public function getGivenHeaderLabel(): string
     {
         return $this->givenHeaderLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setGivenHeaderLabel(string $label)
+    public function setGivenHeaderLabel(string $label): static
     {
         $this->givenHeaderLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getExpectedOrderLabel()
+    public function getExpectedOrderLabel(): string
     {
         return $this->expectedOrderLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setExpectedOrderLabel(string $label)
+    public function setExpectedOrderLabel(string $label): static
     {
         $this->expectedOrderLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return string
-     */
-    public function getActualOrderLabel()
+    public function getActualOrderLabel(): string
     {
         return $this->actualOrderLabel;
     }
 
-    /**
-     * @param string $label
-     *
-     * @return $this
-     */
-    public function setActualOrderLabel(string $label)
+    public function setActualOrderLabel(string $label): static
     {
         $this->actualOrderLabel = $label;
+
         return $this;
     }
 
-    /**
-     * @return array
-     */
-    public function getExpectedHeader()
+    /** @return list<string> */
+    public function getExpectedHeader(): array
     {
-        return $this->expectedHeader;
+        return array_values($this->expectedHeader);
     }
 
-    /**
-     * @param array $header
-     *
-     * @return $this
-     */
-    public function expectHeader(array $header)
+    /** @param list<string> $header */
+    public function expectHeader(array $header): static
     {
         $this->expectedHeader = $header;
+
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function expectNoHeader()
+    public function expectNoHeader(): static
     {
         $this->expectedHeader = [];
+
         return $this;
     }
 
-    /**
-     * @return bool
-     */
-    public function isRowOrderRespected()
+    public function isRowOrderRespected(): bool
     {
         return $this->respectRowOrder;
     }
 
-    /**
-     * @return $this
-     */
-    public function ignoreRowOrder()
+    public function ignoreRowOrder(): static
     {
         $this->respectRowOrder = false;
+
         return $this;
     }
 
-    /**
-     * @return $this
-     */
-    public function respectRowOrder()
+    public function respectRowOrder(): static
     {
         $this->respectRowOrder = true;
+
         return $this;
     }
 
     /**
      * Performs the assertion.
      *
-     * @return true
-     *
      * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
+     * @throws \LogicException
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
      */
-    public function assert()
+    public function assert(): bool
     {
         $this->assertHeader();
         $this->assertBody();
+
         return true;
     }
 
-    protected function assertHeader()
+    /**
+     * @throws \LogicException
+     * @throws \Behat\Gherkin\Exception\NodeException
+     */
+    private function assertHeader(): void
     {
-        $expected_header = $this->getExpectedHeader();
-        if (empty($expected_header)) {
+        $expectedHeader = $this->getExpectedHeader();
+
+        if ($expectedHeader === []) {
             return;
         }
 
-        $actual_header = $this->getExpected()->getRow(0);
-        if ($expected_header === $actual_header) {
+        $actualHeader = $this->expected->getRow(0);
+
+        if ($expectedHeader === $actualHeader) {
             return;
         }
 
         $message = [
-            '--- ' . $this->getExpectedHeaderLabel(),
-            (new TableNode([$expected_header]))->getTableAsString(),
-            '+++ ' . $this->getGivenHeaderLabel(),
-            (new TableNode([$actual_header]))->getTableAsString(),
+            '--- ' . $this->expectedHeaderLabel,
+            (new TableNode([$expectedHeader]))->getTableAsString(),
+            '+++ ' . $this->givenHeaderLabel,
+            (new TableNode([$actualHeader]))->getTableAsString(),
         ];
-        throw new \LogicException(implode(PHP_EOL, $message));
+
+        throw new LogicException(implode(PHP_EOL, $message));
     }
 
-    protected function assertBody()
+    /**
+     * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
+     */
+    private function assertBody(): void
     {
-        if ($this->isRowOrderRespected()) {
+        if ($this->respectRowOrder) {
             $this->assertBodyRespectingRowOrder();
         } else {
             $this->assertBodyIgnoringRowOrder();
         }
     }
 
-    protected function assertBodyRespectingRowOrder()
+    /**
+     * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
+     */
+    private function assertBodyRespectingRowOrder(): void
     {
-        $expected_body_rows = $this->getExpectedBody()->getRows();
-        $actual_body_rows = $this->getActual()->getRows();
+        $expectedBodyRows = $this->getExpectedBody()->getRows();
+        $actualBodyRows = $this->actual->getRows();
 
         // Normalize column widths between expected and actual tables.
-        $combined_table = (new TableNode(array_merge($expected_body_rows, $actual_body_rows)))
+        $combinedTable = (new TableNode(array_merge($expectedBodyRows, $actualBodyRows)))
             ->getTableAsString();
-        $combined_table_rows = explode(PHP_EOL, $combined_table);
+        $combinedTableRows = explode(PHP_EOL, $combinedTable);
 
-        $expected_body = implode(PHP_EOL, array_slice($combined_table_rows, 0, count($expected_body_rows)));
-        $actual_body = implode(PHP_EOL, array_slice($combined_table_rows, count($expected_body_rows)));
+        $expectedBody = implode(PHP_EOL, array_slice($combinedTableRows, 0, count($expectedBodyRows)));
+        $actualBody = implode(PHP_EOL, array_slice($combinedTableRows, count($expectedBodyRows)));
 
-        if ($expected_body != $actual_body) {
-            $sorted_expected_rows = $this->sortTable(new TableNode($expected_body_rows))->getRows();
-            $sorted_actual_rows = $this->sortTable(new TableNode($actual_body_rows))->getRows();
+        if ($expectedBody !== $actualBody) {
+            $sortedExpectedRows = $this->sortTable(new TableNode($expectedBodyRows))->getRows();
+            $sortedActualRows = $this->sortTable(new TableNode($actualBodyRows))->getRows();
 
-            if ($sorted_expected_rows == $sorted_actual_rows) {
-                $message = $this->generateMessageForRowOrderMismatch($expected_body_rows, $actual_body_rows);
+            if ($sortedExpectedRows === $sortedActualRows) {
+                $message = $this->generateMessageForRowOrderMismatch($expectedBodyRows, $actualBodyRows);
+
                 throw new UnequalTablesException($message);
             }
 
-            $message = $this->generateMessageForContentAndOrderDifferences($expected_body_rows, $actual_body_rows);
-            throw new UnequalTablesException($message);
-        }
-    }
+            $message = $this->generateMessageForContentAndOrderDifferences($expectedBodyRows, $actualBodyRows);
 
-    protected function assertBodyIgnoringRowOrder()
-    {
-        $expected_body = $this->sortTable($this->getExpectedBody());
-        $actual_body = $this->sortTable($this->getActual());
-
-        if ($expected_body != $actual_body) {
-            $message = $this->generateMessageForPostSortDifferences($expected_body->getRows(), $actual_body->getRows());
             throw new UnequalTablesException($message);
         }
     }
 
     /**
-     * @return \Behat\Gherkin\Node\TableNode
+     * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
      */
-    protected function getExpectedBody()
+    private function assertBodyIgnoringRowOrder(): void
     {
-        $body = $this->getExpected()->getRows();
-        if ($this->getExpectedHeader()) {
+        $expectedBody = $this->sortTable($this->getExpectedBody());
+        $actualBody = $this->sortTable($this->actual);
+
+        if ($expectedBody->getRows() !== $actualBody->getRows()) {
+            $message = $this->generateMessageForPostSortDifferences($expectedBody->getRows(), $actualBody->getRows());
+
+            throw new UnequalTablesException($message);
+        }
+    }
+
+    /** @throws \Behat\Gherkin\Exception\NodeException */
+    private function getExpectedBody(): TableNode
+    {
+        $body = $this->expected->getRows();
+
+        if ($this->getExpectedHeader() !== []) {
             array_shift($body);
         }
+
         return new TableNode($body);
     }
 
-    /**
-     * @param \Behat\Gherkin\Node\TableNode $table
-     *
-     * @return \Behat\Gherkin\Node\TableNode
-     */
-    protected function sortTable(TableNode $table)
+    /** @throws \Behat\Gherkin\Exception\NodeException */
+    private function sortTable(TableNode $table): TableNode
     {
-        $raw_table = $table->getTable();
-        sort($raw_table);
-        return new TableNode($raw_table);
+        $rawTable = $table->getTable();
+        sort($rawTable);
+
+        return new TableNode($rawTable);
     }
 
     /**
-     * @param array $expected_rows
-     * @param array $actual_rows
+     * @param list<list<string>> $expectedRows
+     * @param list<list<string>> $actualRows
      *
-     * @return string
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
      */
-    protected function generateMessageForPostSortDifferences(array $expected_rows, array $actual_rows)
+    private function generateMessageForPostSortDifferences(array $expectedRows, array $actualRows): string
     {
         $message = [];
-        $expected_counts = $this->countRows($expected_rows);
-        $actual_counts = $this->countRows($actual_rows);
+        $expectedCounts = $this->countRows($expectedRows);
+        $actualCounts = $this->countRows($actualRows);
 
         // Rows completely absent from actual (expected > 0, actual == 0).
-        $missing_rows = $this->buildAbsentRows($expected_counts, $actual_counts);
+        $missingRows = $this->buildAbsentRows($expectedCounts, $actualCounts);
         // Rows entirely new in actual (actual > 0, expected == 0).
-        $unexpected_rows = $this->buildAbsentRows($actual_counts, $expected_counts);
+        $unexpectedRows = $this->buildAbsentRows($actualCounts, $expectedCounts);
         // Rows present on both sides but with differing counts.
-        $duplicate_rows = $this->buildDuplicateRowDifferenceLines($expected_counts, $actual_counts);
+        $duplicateRows = $this->buildDuplicateRowDifferenceLines($expectedCounts, $actualCounts);
 
-        if (!empty($missing_rows)) {
-            $message[] = '--- ' . $this->getMissingRowsLabel();
-            $message[] = (new TableNode($missing_rows))->getTableAsString();
+        if ($missingRows !== []) {
+            $message[] = '--- ' . $this->missingRowsLabel;
+            $message[] = (new TableNode($missingRows))->getTableAsString();
         }
-        if (!empty($unexpected_rows)) {
-            $message[] = '+++ ' . $this->getUnexpectedRowsLabel();
-            $message[] = (new TableNode($unexpected_rows))->getTableAsString();
+
+        if ($unexpectedRows !== []) {
+            $message[] = '+++ ' . $this->unexpectedRowsLabel;
+            $message[] = (new TableNode($unexpectedRows))->getTableAsString();
         }
-        if (!empty($duplicate_rows)) {
-            $message[] = '*** ' . $this->getDuplicateRowsLabel();
-            foreach ($duplicate_rows as $line) {
+
+        if ($duplicateRows !== []) {
+            $message[] = '*** ' . $this->duplicateRowsLabel;
+
+            foreach ($duplicateRows as $line) {
                 $message[] = $line;
             }
         }
@@ -464,80 +369,98 @@ class TableEqualityAssertion
     }
 
     /**
-     * @param array $rows
+     * @param list<list<string>> $rows
      *
-     * @return array
+     * @return array<string, array{row: list<string>, count: int}>
+     *
+     * @throws \JsonException
      */
-    protected function countRows(array $rows)
+    private function countRows(array $rows): array
     {
         $counts = [];
+
         foreach ($rows as $row) {
-            $key = json_encode($row);
+            $key = json_encode($row, JSON_THROW_ON_ERROR) ?: '';
+
             if (!isset($counts[$key])) {
                 $counts[$key] = [
                     'row' => $row,
                     'count' => 0,
                 ];
             }
-            $counts[$key]['count']++;
+
+            ++$counts[$key]['count'];
         }
+
         return $counts;
     }
 
     /**
-     * Returns rows that appear in $present_counts but are completely absent from $absent_counts.
+     * Returns rows that appear in $presentCounts but are completely absent from $absentCounts.
      *
-     * @param array $present_counts
-     * @param array $absent_counts
+     * @param array<string, array{row: list<string>, count: int}> $presentCounts
+     * @param array<string, array{row: list<string>, count: int}> $absentCounts
      *
-     * @return array
+     * @return list<list<string>>
      */
-    protected function buildAbsentRows(array $present_counts, array $absent_counts)
+    private function buildAbsentRows(array $presentCounts, array $absentCounts): array
     {
         $rows = [];
-        foreach ($present_counts as $key => $data) {
-            if (!empty($absent_counts[$key]['count'])) {
+
+        foreach ($presentCounts as $key => $data) {
+            if (($absentCounts[$key]['count'] ?? 0) > 0) {
                 continue;
             }
 
-            for ($i = 0; $i < $data['count']; $i++) {
+            for ($i = 0; $i < $data['count']; ++$i) {
                 $rows[] = $data['row'];
             }
         }
+
         return $rows;
     }
 
     /**
-     * @param array $expected_counts
-     * @param array $actual_counts
+     * @param array<string, array{row: list<string>, count: int}> $expectedCounts
+     * @param array<string, array{row: list<string>, count: int}> $actualCounts
      *
-     * @return array
+     * @return list<string>
+     *
+     * @throws \Behat\Gherkin\Exception\NodeException
      */
-    protected function buildDuplicateRowDifferenceLines(array $expected_counts, array $actual_counts)
+    private function buildDuplicateRowDifferenceLines(array $expectedCounts, array $actualCounts): array
     {
         $lines = [];
-        $keys = array_unique(array_merge(array_keys($expected_counts), array_keys($actual_counts)));
+        $keys = array_unique(array_merge(array_keys($expectedCounts), array_keys($actualCounts)));
 
         foreach ($keys as $key) {
-            $expected_count = $expected_counts[$key]['count'] ?? 0;
-            $actual_count = $actual_counts[$key]['count'] ?? 0;
-            if ($expected_count == $actual_count) {
-                continue;
-            }
-            // Only report as duplicate when the row is present on both sides.
-            if ($expected_count === 0 || $actual_count === 0) {
+            $expectedCount = $expectedCounts[$key]['count'] ?? 0;
+            $actualCount = $actualCounts[$key]['count'] ?? 0;
+
+            if ($expectedCount === $actualCount) {
                 continue;
             }
 
-            $row = $actual_counts[$key]['row'] ?? $expected_counts[$key]['row'];
-            $row_string = (new TableNode([$row]))->getTableAsString();
-            $actual_times_label = $actual_count === 1 ? 'time' : 'times';
+            // Only report as duplicate when the row is present on both sides.
+            if ($expectedCount === 0) {
+                continue;
+            }
+
+            if ($actualCount === 0) {
+                continue;
+            }
+
+            $row = $actualCounts[$key]['row'] ?? $expectedCounts[$key]['row'];
+            $rowString = (new TableNode([$row]))->getTableAsString();
+            $actualTimesLabel = $actualCount === 1
+                ? 'time'
+                : 'times';
             $lines[] = sprintf(
                 '%s (appears %d %s, expected %d)',
-                $row_string,
-                $actual_count,
-                $actual_times_label,
-                $expected_count
+                $rowString,
+                $actualCount,
+                $actualTimesLabel,
+                $expectedCount,
             );
         }
 
@@ -545,88 +468,98 @@ class TableEqualityAssertion
     }
 
     /**
-     * @param array $expected_rows
-     * @param array $actual_rows
+     * @param list<list<string>> $expectedRows
+     * @param list<list<string>> $actualRows
      *
-     * @return string
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
      */
-    protected function generateMessageForRowOrderMismatch(array $expected_rows, array $actual_rows)
+    private function generateMessageForRowOrderMismatch(array $expectedRows, array $actualRows): string
     {
-        $message = ['*** ' . $this->getRowOrderMismatchLabel()];
-        $expected_positions = $this->mapRowPositions($expected_rows);
-        $actual_positions = $this->mapRowPositions($actual_rows);
+        $message = ['*** ' . $this->rowOrderMismatchLabel];
+        $expectedPositions = $this->mapRowPositions($expectedRows);
+        $actualPositions = $this->mapRowPositions($actualRows);
 
-        foreach ($expected_positions as $key => $expected_data) {
-            $actual_data = $actual_positions[$key];
-            $position_count = min(count($expected_data['positions']), count($actual_data['positions']));
+        foreach ($expectedPositions as $key => $expectedData) {
+            $actualData = $actualPositions[$key];
+            $positionCount = min(count($expectedData['positions']), count($actualData['positions']));
 
-            for ($i = 0; $i < $position_count; $i++) {
-                $expected_position = $expected_data['positions'][$i];
-                $actual_position = $actual_data['positions'][$i];
-                if ($expected_position == $actual_position) {
+            for ($i = 0; $i < $positionCount; ++$i) {
+                $expectedPosition = $expectedData['positions'][$i];
+                $actualPosition = $actualData['positions'][$i];
+
+                if ($expectedPosition === $actualPosition) {
                     continue;
                 }
 
                 $message[] = sprintf(
                     '%s should be at position %d, found at %d',
-                    (new TableNode([$expected_data['row']]))->getTableAsString(),
-                    $expected_position,
-                    $actual_position
+                    (new TableNode([$expectedData['row']]))->getTableAsString(),
+                    $expectedPosition,
+                    $actualPosition,
                 );
             }
         }
 
-        $message[] = $this->getExpectedOrderLabel();
-        $message[] = (new TableNode($expected_rows))->getTableAsString();
-        $message[] = $this->getActualOrderLabel();
-        $message[] = (new TableNode($actual_rows))->getTableAsString();
+        $message[] = $this->expectedOrderLabel;
+        $message[] = (new TableNode($expectedRows))->getTableAsString();
+        $message[] = $this->actualOrderLabel;
+        $message[] = (new TableNode($actualRows))->getTableAsString();
 
         return implode(PHP_EOL, $message);
     }
 
     /**
-     * @param array $expected_rows
-     * @param array $actual_rows
+     * @param list<list<string>> $expectedRows
+     * @param list<list<string>> $actualRows
      *
-     * @return string
+     * @throws \Behat\Gherkin\Exception\NodeException
+     * @throws \JsonException
      */
-    protected function generateMessageForContentAndOrderDifferences(array $expected_rows, array $actual_rows)
+    private function generateMessageForContentAndOrderDifferences(array $expectedRows, array $actualRows): string
     {
-        $sorted_expected = $this->sortTable(new TableNode($expected_rows))->getRows();
-        $sorted_actual = $this->sortTable(new TableNode($actual_rows))->getRows();
+        $sortedExpected = $this->sortTable(new TableNode($expectedRows))->getRows();
+        $sortedActual = $this->sortTable(new TableNode($actualRows))->getRows();
 
         $message = [];
-        $content_message = $this->generateMessageForPostSortDifferences($sorted_expected, $sorted_actual);
-        if ($content_message) {
-            $message[] = $content_message;
+        $contentMessage = $this->generateMessageForPostSortDifferences($sortedExpected, $sortedActual);
+
+        if ($contentMessage !== '') {
+            $message[] = $contentMessage;
         }
 
-        $message[] = $this->getExpectedOrderLabel();
-        $message[] = (new TableNode($expected_rows))->getTableAsString();
-        $message[] = $this->getActualOrderLabel();
-        $message[] = (new TableNode($actual_rows))->getTableAsString();
+        $message[] = $this->expectedOrderLabel;
+        $message[] = (new TableNode($expectedRows))->getTableAsString();
+        $message[] = $this->actualOrderLabel;
+        $message[] = (new TableNode($actualRows))->getTableAsString();
 
         return implode(PHP_EOL, $message);
     }
 
     /**
-     * @param array $rows
+     * @param list<list<string>> $rows
      *
-     * @return array
+     * @return array<string, array{row: list<string>, positions: list<int>}>
+     *
+     * @throws \JsonException
      */
-    protected function mapRowPositions(array $rows)
+    private function mapRowPositions(array $rows): array
     {
         $positions = [];
+
         foreach ($rows as $index => $row) {
-            $key = json_encode($row);
+            $key = json_encode($row, JSON_THROW_ON_ERROR) ?: '';
+
             if (!isset($positions[$key])) {
                 $positions[$key] = [
                     'row' => $row,
                     'positions' => [],
                 ];
             }
+
             $positions[$key]['positions'][] = $index + 1;
         }
+
         return $positions;
     }
 }
