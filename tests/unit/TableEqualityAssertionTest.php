@@ -84,10 +84,8 @@ final class TableEqualityAssertionTest extends TestCase
         $left = new TableNode($left);
         $right = new TableNode($right);
 
-        $actual = (new TableEqualityAssertion($left, $right))
+        (new TableEqualityAssertion($left, $right))
             ->assert();
-
-        self::assertTrue($actual);
     }
 
     /**
@@ -280,11 +278,9 @@ final class TableEqualityAssertionTest extends TestCase
         $left = new TableNode(array_merge([$header], $rows));
         $right = new TableNode($rows);
 
-        $actual = (new TableEqualityAssertion($left, $right))
+        (new TableEqualityAssertion($left, $right))
             ->expectHeader($header)
             ->assert();
-
-        self::assertTrue($actual);
     }
 
     /**
@@ -335,11 +331,9 @@ final class TableEqualityAssertionTest extends TestCase
             ['id5', 'Label five', 'Fifth value', 'false'],
         ]);
 
-        $actual = (new TableEqualityAssertion($left, $right))
+        (new TableEqualityAssertion($left, $right))
             ->ignoreRowOrder()
             ->assert();
-
-        self::assertTrue($actual);
     }
 
     /**

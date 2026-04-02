@@ -62,7 +62,7 @@ Notes:
 - The assertion compares Behat `TableNode` inputs.
 - `expectHeader(...)` controls header validation behavior.
 - `ignoreRowOrder()` and `respectRowOrder()` control order-sensitive diagnostics.
-- `assert()` returns `true` on success and throws on failure.
+- `assert()` returns void on success and throws on failure.
 
 ## Non-Contract Internals
 
