@@ -203,7 +203,7 @@ final class TableEqualityAssertion
      *
      * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
      */
-    public function assert(): bool
+    public function assert(): void
     {
         try {
             $this->assertHeader();
@@ -215,8 +215,6 @@ final class TableEqualityAssertion
                 $e,
             );
         }
-
-        return true;
     }
 
     /**
