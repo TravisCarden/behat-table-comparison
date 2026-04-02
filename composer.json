@@ -64,6 +64,8 @@
         "check:rector": "grumphp run --testsuite=rector",
         "check:static": "grumphp run --testsuite=static",
         "check:test": "grumphp run --testsuite=test",
+        "docker:build": "docker compose build",
+        "docker:down": "docker compose down",
         "fix:all": [
             "@fix:rector",
             "@fix:phpcbf"
@@ -81,6 +83,8 @@
         "check:rector": "Validates that Rector would make no further changes",
         "check:static": "Runs all static analysis tools",
         "check:test": "Runs all tests",
+        "docker:build": "Builds the Docker images for all supported PHP versions",
+        "docker:down": "Stops and removes Docker containers and networks (images and volumes are preserved; no rebuild needed to resume)",
         "fix:all": "Runs all code fixers",
         "fix:phpcbf": "Automatically fixes standards violations where possible",
         "fix:rector": "Applies Rector refactorings"
@@ -115,6 +119,12 @@
         ],
         "check:test": [
             "test"
+        ],
+        "docker:build": [
+            "build"
+        ],
+        "docker:down": [
+            "down"
         ],
         "fix:all": [
             "fix-all",
