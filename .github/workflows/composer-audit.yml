@@ -1,0 +1,34 @@
+---
+name: Composer Audit
+
+on:
+    schedule:
+        # Every Monday at 00:00 UTC
+        -   cron: "0 0 * * 1"
+
+jobs:
+    audit:
+        name: "Composer Audit (${{ matrix.branch }})"
+        runs-on: ubuntu-latest
+        strategy:
+            fail-fast: false
+            matrix:
+                branch: [develop, master]
+        steps:
+            -   name: "Checkout code"
+                uses: actions/checkout@v4
+                with:
+                    ref: ${{ matrix.branch }}
+
+            -   name: "Set up PHP"
+                uses: shivammathur/setup-php@v2
+                with:
+                    php-version: "8.3"
+
+            -   name: "Install dependencies"
+                uses: ramsey/composer-install@v3
+                with:
+                    composer-options: "--no-cache"
+
+            -   name: "Run composer audit"
+                run: composer audit
