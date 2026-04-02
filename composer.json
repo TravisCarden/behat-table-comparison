@@ -5,7 +5,9 @@
     "type": "library",
     "keywords": [
         "Behat",
-        "Gherkin"
+        "Gherkin",
+        "dev",
+        "testing"
     ],
     "authors": [
         {
