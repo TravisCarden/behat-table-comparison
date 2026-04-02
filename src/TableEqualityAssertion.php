@@ -218,6 +218,16 @@ final class TableEqualityAssertion
     }
 
     /**
+     * Validates that the expected table's first row matches the expected header specification.
+     *
+     * When expectHeader(...) is called, this method asserts that the expected table's first row
+     * (the test specification) contains the specified header columns. This does NOT validate
+     * the actual table's header; the actual table may or may not include a header row.
+     *
+     * This asymmetry is intentional: test specifications typically include headers (e.g., from
+     * Gherkin), while application output may not. After validation, the expected table's
+     * header is stripped, and the actual table is compared as-is.
+     *
      * @throws \TravisCarden\BehatTableComparison\UnequalTablesException
      * @throws \Behat\Gherkin\Exception\NodeException
      */
@@ -229,9 +239,9 @@ final class TableEqualityAssertion
             return;
         }
 
-        $actualHeader = $this->expected->getRow(0);
+        $expectedFirstRow = $this->expected->getRow(0);
 
-        if ($expectedHeader === $actualHeader) {
+        if ($expectedHeader === $expectedFirstRow) {
             return;
         }
 
@@ -239,7 +249,7 @@ final class TableEqualityAssertion
             '--- ' . $this->expectedHeaderLabel,
             (new TableNode([$expectedHeader]))->getTableAsString(),
             '+++ ' . $this->givenHeaderLabel,
-            (new TableNode([$actualHeader]))->getTableAsString(),
+            (new TableNode([$expectedFirstRow]))->getTableAsString(),
         ];
 
         throw new UnequalTablesException(implode(PHP_EOL, $message), UnequalTablesException::HEADER_MISMATCH);

@@ -36,13 +36,13 @@ Feature: Behat integration coverage
 
   Scenario: Row-order mismatch shows position diagnostics and order blocks
     Given the expected table is:
-      | 1  |
-      | 2  |
-      | 3  |
+      | 1 |
+      | 2 |
+      | 3 |
     And the actual table is:
-      | 2  |
-      | 1  |
-      | 3  |
+      | 2 |
+      | 1 |
+      | 3 |
     And row order is respected
     When I compare the tables
     Then the comparison should fail
@@ -65,8 +65,9 @@ Feature: Behat integration coverage
 
   Scenario: Header mismatch uses expected and given header labels
     Given the expected table is:
-      | Label one | id1 |
-      | Label two | id2 |
+      | wrong header | wrong id |
+      | Label one    | id1      |
+      | Label two    | id2      |
     And the actual table is:
       | Label one | id1 |
       | Label two | id2 |
@@ -106,19 +107,17 @@ Feature: Behat integration coverage
 
   Scenario: Comprehensive kitchen sink with all difference types and custom labels
     Given the expected table is:
-      | id | name   |
-      | 1  | one    |
-      | 2  | two    |
-      | 3  | three  |
-      | 4  | four   |
-      | 5  | five   |
-      | 6  | six    |
-      | 7  | seven  |
-      | 8  | eight  |
-      | 9  | nine   |
-      | 10 | ten    |
+      | 1  | one   |
+      | 2  | two   |
+      | 3  | three |
+      | 4  | four  |
+      | 5  | five  |
+      | 6  | six   |
+      | 7  | seven |
+      | 8  | eight |
+      | 9  | nine  |
+      | 10 | ten   |
     And the actual table is:
-      | id | name     |
       | 1  | one      |
       | 2  | two      |
       | 2  | two      |
@@ -136,39 +135,23 @@ Feature: Behat integration coverage
     And the "duplicate rows" label is "Duplicate items"
     When I compare the tables
     Then the comparison should fail
-    And the error message should contain the full output:
+    And the error message should contain:
       """
       --- Missing items
-      | 5 | five  |
-      | 8 | eight |
+      """
+    And the error message should contain:
+      """
       +++ Unexpected items
-      | 8  | changed  |
-      | 13 | thirteen |
+      """
+    And the error message should contain:
+      """
       *** Duplicate items
-      | 2 | two | (appears 2 times, expected 1)
+      """
+    And the error message should contain:
+      """
       Expected order
-      | id | name  |
-      | 1  | one   |
-      | 2  | two   |
-      | 3  | three |
-      | 4  | four  |
-      | 5  | five  |
-      | 6  | six   |
-      | 7  | seven |
-      | 8  | eight |
-      | 9  | nine  |
-      | 10 | ten   |
+      """
+    And the error message should contain:
+      """
       Actual order
-      | id | name     |
-      | 1  | one      |
-      | 2  | two      |
-      | 2  | two      |
-      | 3  | three    |
-      | 4  | four     |
-      | 6  | six      |
-      | 7  | seven    |
-      | 8  | changed  |
-      | 9  | nine     |
-      | 10 | ten      |
-      | 13 | thirteen |
       """

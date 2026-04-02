@@ -60,9 +60,79 @@ Notes:
 ## Input and Comparison Semantics Contract
 
 - The assertion compares Behat `TableNode` inputs.
-- `expectHeader(...)` controls header validation behavior.
+- `expectHeader(...)` controls header validation behavior: when called, both the expected and actual tables' first rows are validated against the specified header, then stripped from body comparison.
 - `ignoreRowOrder()` and `respectRowOrder()` control order-sensitive diagnostics.
 - `assert()` returns void on success and throws on failure.
+
+## Header Validation Semantics
+
+### Terminology
+
+Three distinct concepts are involved in header validation:
+
+- **Specified header**: The header specification passed to `expectHeader(...)`. This declares what columns should exist.
+- **Expected table**: The table provided as the first argument to `TableEqualityAssertion` (the test specification, typically from Gherkin). Its first row is validated and stripped when `expectHeader(...)` is used.
+- **Actual table**: The table provided as the second argument to `TableEqualityAssertion` (the application's real output). It is compared as-is with no header stripping.
+
+### Validation Process (Asymmetrical Design)
+
+When `expectHeader(...)` is called:
+
+1. The **first row of the expected table** is validated against the specified header. If it does not match, `HEADER_MISMATCH` is thrown.
+2. The **first row of the expected table is excluded from body comparison** (treated as a header, not a data row).
+3. The **actual table is compared as-is** — it is not validated against the header and no rows are stripped.
+
+This asymmetrical design accommodates the common pattern where test specifications include headers (e.g., from Gherkin TableNode format) while application-generated output may not. The validation ensures the test specification has the correct structure before comparing bodies.
+
+### Example
+
+**Test specification (from Gherkin, includes header):**
+```gherkin
+Then the following users should exist
+  | name  | role  |
+  | Alice | admin |
+  | Bob   | user  |
+```
+
+**Application output (constructed data, no header):**
+```php
+$actual = new TableNode([
+    ['Alice', 'admin'],  // Note: no header row
+    ['Bob', 'user'],
+]);
+```
+
+**PHP code:**
+```php
+$expected = new TableNode([
+    ['name', 'role'],    // Header from Gherkin
+    ['Alice', 'admin'],  // Body rows
+    ['Bob', 'user'],
+]);
+
+(new TableEqualityAssertion($expected, $actual))
+    ->expectHeader(['name', 'role'])
+    ->assert();  // ✓ Passes
+    // - Expected table's header validated and stripped
+    // - Actual table compared as-is
+    // - Bodies match
+```
+
+### When Header Validation Fails
+
+If the expected table's first row does not match the specified header:
+
+```php
+$expected = new TableNode([
+    ['username', 'permission'],  // ✗ Does not match ['name', 'role']
+    ['Alice', 'admin'],
+]);
+
+
+(new TableEqualityAssertion($expected, $actual))
+    ->expectHeader(['name', 'role'])
+    ->assert();  // Throws HEADER_MISMATCH
+```
 
 ## Non-Contract Internals
 

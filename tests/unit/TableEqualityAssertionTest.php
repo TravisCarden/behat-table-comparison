@@ -225,13 +225,14 @@ final class TableEqualityAssertionTest extends TestCase
     public function testAssertionWithCustomHeaderLabels(): void
     {
         $this->expectException(UnequalTablesException::class);
+        $header = ['label', 'id'];
+        $wrongHeader = ['Label one', 'id1'];
         $rows = [['Label one', 'id1'], ['Label two', 'id2']];
-        $left = new TableNode($rows);
-        $right = $left;
+        $left = new TableNode(array_merge([$wrongHeader], $rows));
 
         try {
-            (new TableEqualityAssertion($left, $right))
-                ->expectHeader(['label', 'id'])
+            (new TableEqualityAssertion($left, new TableNode($rows)))
+                ->expectHeader($header)
                 ->setExpectedHeaderLabel('Expected columns')
                 ->setGivenHeaderLabel('Actual columns')
                 ->assert();
@@ -289,13 +290,14 @@ final class TableEqualityAssertionTest extends TestCase
     public function testAssertionWithHeaderMismatch(): void
     {
         $this->expectException(UnequalTablesException::class);
-        $rows = [['Label one', 'id1'], ['Label two', 'id2']];
-        $left = new TableNode($rows);
-        $right = $left;
+        $header = ['label', 'id'];
+        $wrongHeader = ['Label one', 'id1'];
+        $left = new TableNode([$wrongHeader, ['Label one', 'id1'], ['Label two', 'id2']]);
+        $right = new TableNode([['Label one', 'id1'], ['Label two', 'id2']]);
 
         try {
             (new TableEqualityAssertion($left, $right))
-                ->expectHeader(['label', 'id'])
+                ->expectHeader($header)
                 ->assert();
         } catch (UnequalTablesException $e) {
             $expected = implode(PHP_EOL, [

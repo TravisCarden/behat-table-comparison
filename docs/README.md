@@ -32,6 +32,7 @@ class FeatureContext implements Context
     {
         // Get the data from the application and create a table from it.
         $application_data = [
+            ['name', 'race'],  // Header row (required when using expectHeader(...)
             ['Frodo Baggins', 'Hobbit'],
             ['Samwise "Sam" Gamgee', 'Hobbit'],
             ['Saruman the White', 'Wizard'],
@@ -60,6 +61,16 @@ class FeatureContext implements Context
 Output is like the following:
 
 ![Example Output](example-output.gif)
+
+## Understanding Headers and Terminology
+
+When using `expectHeader(...)`, it's important to understand the asymmetrical design:
+
+- **Specified header**: The header you declare by calling `expectHeader(...)`. This is what the columns should be.
+- **Expected table**: The table you provide as the first argument to `TableEqualityAssertion` (your test specification). Its first row must match the specified header and is stripped before comparison.
+- **Actual table**: The table you provide as the second argument to `TableEqualityAssertion` (the application's real output). It is compared as-is with no header validation or stripping.
+
+This design is intentional: test specifications typically include headers (e.g., from Gherkin), while application-generated output often does not.
 
 ## Error Message Specification
 
@@ -110,10 +121,10 @@ When row content differs while respecting row order, semantic missing/unexpected
 
 ### Header mismatch diagnostics
 
-When `expectHeader(...)` is used and the first row does not match:
+When `expectHeader(...)` is used and the expected table's first row does not match the specified header:
 
-- `--- Expected header`
-- `+++ Given header`
+- `--- Expected header`: The header specification passed to `expectHeader(...)`
+- `+++ Given header`: The expected table's first row (the test specification header that was provided)
 
 ### Label customization
 
