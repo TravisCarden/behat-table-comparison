@@ -1,3 +1,16 @@
-/.phpunit.result.cache
-/build/
+# Artifacts, dependencies, and project-level config files
+/var/*
+!/var/.gitkeep
 /vendor/
+/phpcs.xml
+/phpunit.xml
+/phpstan.neon
+
+# User-specific and high churn PhpStorm files
+/.idea/*
+/.idea/dictionaries/*
+!/.idea/dictionaries/
+!/.idea/dictionaries/project.xml
+!/.idea/behat-table-comparison.iml
+!/.idea/runConfigurations/
+!/.idea/scopes/

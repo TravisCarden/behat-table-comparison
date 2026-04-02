@@ -1,0 +1,7 @@
+default:
+  suites:
+    default:
+      paths:
+        - features
+      contexts:
+        - TravisCarden\BehatTableComparison\Examples\Bootstrap\FeatureContext

@@ -1,0 +1,7 @@
+default:
+  suites:
+    default:
+      paths:
+        - behat/features
+      contexts:
+        - TravisCarden\BehatTableComparison\Tests\Behat\Bootstrap\IntegrationTestingContext

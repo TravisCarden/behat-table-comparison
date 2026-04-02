@@ -1,0 +1,157 @@
+# https://github.com/phpro/grumphp#configuration
+---
+grumphp:
+    ascii:
+        failed: ~
+        succeeded: ~
+    fixer:
+        enabled: false
+    hide_circumvention_tip: true
+    process_timeout: 300
+    testsuites:
+        phpcs:
+            tasks:
+                - phpcs
+        phpstan:
+            tasks:
+                - phpstan
+        rector:
+            tasks:
+                - rector
+        phpunit:
+            tasks:
+                - phpunit_php_83
+                - phpunit_php_84
+                - phpunit_php_85
+        test_php_83:
+            tasks:
+                - phpunit_php_83
+                - behat
+        test_php_84:
+            tasks:
+                - phpunit_php_84
+        test_php_85:
+            tasks:
+                - phpunit_php_85
+        phpunit_all:
+            tasks:
+                - phpunit_php_83
+                - phpunit_php_84
+                - phpunit_php_85
+        all:
+            tasks:
+                - phpcs
+                - phpstan
+                - rector
+                - composer_validate
+                - composer_normalize
+                - composer_validate_autoload
+                - phpunit_php_83
+                - phpunit_php_84
+                - phpunit_php_85
+                - behat
+        behat:
+            tasks:
+                - behat
+        static:
+            tasks:
+                - phpcs
+                - phpstan
+                - rector
+                - composer_validate
+                - composer_normalize
+                - composer_validate_autoload
+        test:
+            tasks:
+                - phpunit_php_83
+                - phpunit_php_84
+                - phpunit_php_85
+                - behat
+        fast:
+            tasks:
+                - phpcs
+                - phpstan
+                - rector
+                - composer_validate
+                - composer_normalize
+                - composer_validate_autoload
+                - phpunit_php_83
+                - behat
+
+    tasks:
+        # --- Static analysis (priority 20 — runs first) ---
+
+        phpcs:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/phpcs -s"]
+
+        phpstan:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/phpstan analyze"]
+
+        rector:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/rector --dry-run"]
+
+        composer_validate:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 composer validate"]
+
+        composer_normalize:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 composer normalize --dry-run"]
+
+        composer_validate_autoload:
+            metadata:
+                task: shell
+                priority: 20
+            scripts:
+                - ["-c", "docker compose run --rm php83 composer dump-autoload --optimize --dry-run --strict-psr --strict-ambiguous"]
+
+        # --- Unit tests (priority 10 — runs second) ---
+
+        phpunit_php_83:
+            metadata:
+                task: shell
+                priority: 10
+            scripts:
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/phpunit"]
+
+        phpunit_php_84:
+            metadata:
+                task: shell
+                priority: 10
+            scripts:
+                - ["-c", "docker compose run --rm php84 php ./vendor/bin/phpunit"]
+
+        phpunit_php_85:
+            metadata:
+                task: shell
+                priority: 10
+            scripts:
+                - ["-c", "docker compose run --rm php85 php ./vendor/bin/phpunit"]
+
+        # --- Integration tests (priority 0 — runs last) ---
+
+        behat:
+            metadata:
+                task: shell
+                priority: 0
+            scripts:
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/behat -c tests/behat.yml --no-interaction --format=progress"]
+                - ["-c", "docker compose run --rm php83 php ./vendor/bin/behat -c examples/behat.yml --no-interaction --format=progress"]

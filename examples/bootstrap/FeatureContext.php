@@ -1,4 +1,6 @@
-<?php
+<?php declare(strict_types=1);
+
+namespace TravisCarden\BehatTableComparison\Examples\Bootstrap;
 
 use Behat\Behat\Context\Context;
 use Behat\Behat\Tester\Exception\PendingException;
@@ -7,22 +9,22 @@ use TravisCarden\BehatTableComparison\TableEqualityAssertion;
 
 /**
  * Defines application features from the specific context.
+ *
+ * This simulates values taken from the actual application. They would not
+ * usually be hardcoded like this.
  */
-class FeatureContext implements Context
+final class FeatureContext implements Context
 {
-
     /**
      * @Given I am :author
      * @Given I am writing :work
      */
-    public function doNothing()
+    public function doNothing(): void
     {
     }
 
-    /**
-     * @Then I should include the following :items in :group
-     */
-    public function iShouldIncludeTheFollowingIn($group, TableNode $expected)
+    /** @Then I should include the following :items in :group */
+    public function iShouldIncludeTheFollowingIn(string $group, TableNode $expected): void
     {
         switch ($group) {
             case 'The Lord of the Rings series':
@@ -35,6 +37,7 @@ class FeatureContext implements Context
                     ->setMissingRowsLabel('Missing books')
                     ->setUnexpectedRowsLabel('Unexpected books')
                     ->assert();
+
                 break;
 
             case 'the Company of the Ring':
@@ -61,5 +64,4 @@ class FeatureContext implements Context
                 throw new PendingException();
         }
     }
-
 }

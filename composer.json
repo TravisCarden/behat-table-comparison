@@ -1,9 +1,14 @@
 {
     "name": "traviscarden/behat-table-comparison",
     "description": "Provides an equality assertion for comparing Behat TableNode tables.",
-    "type": "library",
-    "keywords": ["Behat", "Gherkin"],
     "license": "MIT",
+    "type": "library",
+    "keywords": [
+        "Behat",
+        "Gherkin",
+        "dev",
+        "testing"
+    ],
     "authors": [
         {
             "name": "Travis Carden",
@@ -11,27 +16,128 @@
         }
     ],
     "require": {
-        "php": "^7.3 || ^8.0",
-        "behat/gherkin": "^4.4.4",
-        "sebastian/diff": ">=1.4"
+        "php": "^8.3",
+        "behat/gherkin": "^4.11"
     },
     "require-dev": {
-        "behat/behat": "^3.3",
-        "phpunit/phpunit": "^9.5",
+        "behat/behat": "^3.16",
+        "dealerdirect/phpcodesniffer-composer-installer": "^1.1",
+        "ergebnis/composer-normalize": "^2.50",
+        "phpro/grumphp-shim": "^2.9",
+        "phpstan/phpstan": "^2.1",
+        "phpstan/phpstan-strict-rules": "^2.0",
+        "phpunit/phpunit": "^12.0",
+        "rector/rector": "^2.1",
+        "slevomat/coding-standard": "^8.13",
         "squizlabs/php_codesniffer": "^3.6"
     },
     "autoload": {
         "psr-4": {
-            "TravisCarden\\BehatTableComparison\\": "src/BehatTableComparison/"
+            "TravisCarden\\BehatTableComparison\\": "src/"
+        }
+    },
+    "autoload-dev": {
+        "psr-4": {
+            "TravisCarden\\BehatTableComparison\\Examples\\Bootstrap\\": "examples/bootstrap/",
+            "TravisCarden\\BehatTableComparison\\Tests\\Behat\\Bootstrap\\": "tests/behat/bootstrap/",
+            "TravisCarden\\BehatTableComparison\\Tests\\Unit\\": "tests/unit/"
         }
     },
     "config": {
+        "allow-plugins": {
+            "dealerdirect/phpcodesniffer-composer-installer": true,
+            "ergebnis/composer-normalize": true,
+            "phpro/grumphp-shim": true
+        },
         "sort-packages": true
     },
+    "extra": {
+        "grumphp": {
+            "disable-plugin": true
+        }
+    },
     "scripts": {
-        "post-install-cmd": [
-            "@install-pre-commit"
+        "check:all": "grumphp run --testsuite=all",
+        "check:behat": "grumphp run --testsuite=behat",
+        "check:fast": "grumphp run --testsuite=fast",
+        "check:phpcs": "grumphp run --testsuite=phpcs",
+        "check:phpstan": "grumphp run --testsuite=phpstan",
+        "check:phpunit": "grumphp run --testsuite=phpunit",
+        "check:rector": "grumphp run --testsuite=rector",
+        "check:static": "grumphp run --testsuite=static",
+        "check:test": "grumphp run --testsuite=test",
+        "docker:build": "docker compose build",
+        "docker:down": "docker compose down",
+        "fix:all": [
+            "@fix:rector",
+            "@fix:phpcbf"
         ],
-        "install-pre-commit": "if [ ! -x .git/hooks/pre-commit ]; then ln -s ../../resources/pre-commit .git/hooks/pre-commit; fi"
+        "fix:phpcbf": "phpcbf",
+        "fix:rector": "rector"
+    },
+    "scripts-descriptions": {
+        "check:all": "Runs static checks locally and tests across all supported PHP versions",
+        "check:behat": "Runs Behat integration tests and executable examples",
+        "check:fast": "Runs all tests and static analysis tools",
+        "check:phpcs": "Checks code for standards compliance",
+        "check:phpstan": "Analyzes code to find bugs",
+        "check:phpunit": "Runs automated tests",
+        "check:rector": "Validates that Rector would make no further changes",
+        "check:static": "Runs all static analysis tools",
+        "check:test": "Runs all tests",
+        "docker:build": "Builds the Docker images for all supported PHP versions",
+        "docker:down": "Stops and removes Docker containers and networks (images and volumes are preserved; no rebuild needed to resume)",
+        "fix:all": "Runs all code fixers",
+        "fix:phpcbf": "Automatically fixes standards violations where possible",
+        "fix:rector": "Applies Rector refactorings"
+    },
+    "scripts-aliases": {
+        "check:all": [
+            "all"
+        ],
+        "check:behat": [
+            "behat"
+        ],
+        "check:fast": [
+            "fast"
+        ],
+        "check:phpcs": [
+            "phpcs",
+            "cs"
+        ],
+        "check:phpstan": [
+            "phpstan",
+            "stan",
+            "analyze"
+        ],
+        "check:phpunit": [
+            "phpunit"
+        ],
+        "check:rector": [
+            "check-rector"
+        ],
+        "check:static": [
+            "static"
+        ],
+        "check:test": [
+            "test"
+        ],
+        "docker:build": [
+            "build"
+        ],
+        "docker:down": [
+            "down"
+        ],
+        "fix:all": [
+            "fix-all",
+            "fix"
+        ],
+        "fix:phpcbf": [
+            "phpcbf",
+            "cbf"
+        ],
+        "fix:rector": [
+            "rector"
+        ]
     }
 }
