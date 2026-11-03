@@ -2,85 +2,62 @@
 
 ## Requirements
 
-- [Docker](https://docs.docker.com/get-docker/) — for testing against all supported PHP versions without installing them locally.
-- PHP `^8.3` and [Composer](https://getcomposer.org/) — for running checks locally when your host PHP satisfies the constraint.
+- [Docker](https://docs.docker.com/get-docker/) — every check runs inside a container, so the supported PHP versions (8.3, 8.4, 8.5) do not need to be installed locally.
+- PHP `^8.3` and [Composer](https://getcomposer.org/) on the host — to run the `composer` scripts below, which drive GrumPHP on the host. GrumPHP in turn runs each tool via `docker compose run --rm`. The `fix:*` scripts run directly on the host PHP.
 
 ---
 
-## Testing with Docker (recommended)
-
-The repository ships with a Docker setup that covers all three supported PHP versions (8.3, 8.4, 8.5). Each service gets its own isolated `vendor/` volume, so the versions coexist without interfering.
-
-### First-time setup
-
-Build the images once after cloning:
+## Setup
 
 ```bash
-composer build
-# equivalent: docker compose build
+composer install   # host dependencies (includes GrumPHP)
+composer build     # build the Docker images; equivalent: docker compose build
 ```
 
-Rebuild only when the `Dockerfile` changes (e.g. a new PHP version is added) or when images have been explicitly removed. Normal day-to-day use does not require a rebuild.
+Rebuild images only when the `Dockerfile` changes (e.g. a new PHP version is added) or when images have been removed.
 
-### Daily workflow
+## Running checks
+
+Run these on the host, not inside a container. The containers do not have Docker available, so Composer scripts run inside them fail.
 
 ```bash
-composer 83               # develop and iterate against PHP 8.3
-composer docker-fast-all  # run check:fast on all PHP versions before pushing
+composer check:fast   # static analysis + PHPUnit on PHP 8.3 + Behat (iterate with this)
+composer check:all    # static analysis + PHPUnit on PHP 8.3, 8.4, and 8.5 + Behat (run before pushing)
 ```
 
-### Run check:fast on one PHP version
+Narrower checks:
+
+| Script | Runs |
+| --- | --- |
+| `composer check:static` | PHPCS, PHPStan, Rector (dry run), `composer validate`, `composer normalize --dry-run`, and an autoload check, on PHP 8.3 |
+| `composer check:test` | PHPUnit on 8.3, 8.4, and 8.5, plus Behat on 8.3 |
+| `composer check:phpunit` | PHPUnit on 8.3, 8.4, and 8.5 |
+| `composer check:behat` | Behat integration tests and examples on 8.3 |
+| `composer check:phpcs`, `check:phpstan`, `check:rector` | One static analysis tool on 8.3 |
+
+To run one test suite on a single PHP version, call GrumPHP directly:
 
 ```bash
-composer 83   # PHP 8.3
-composer 84   # PHP 8.4
-composer 85   # PHP 8.5
-# equivalent: composer docker:check-fast-83 / docker:check-fast-84 / docker:check-fast-85
+vendor/bin/grumphp run --testsuite=test_php_84   # PHPUnit on 8.4 (also test_php_83, which adds Behat, and test_php_85)
 ```
 
-### Run check:fast on all PHP versions
+Apply automatic fixes (Rector and PHPCBF) on the host:
 
 ```bash
-composer docker-fast-all
-# equivalent: composer docker:check-fast-all
+composer fix:all
 ```
 
-### Run a specific check on one PHP version
+See `composer list` for all scripts and their aliases (for example `composer fast`, `composer all`, `composer fix-all`).
 
-Pass any Composer script directly as an argument:
+## Cleaning up
 
 ```bash
-docker compose run --rm php83 composer check:phpunit
-docker compose run --rm php83 composer check:behat
-docker compose run --rm php84 composer check:static
+composer down   # equivalent: docker compose down
 ```
 
-### Clean up
+Containers are started with `--rm` and removed when a check finishes, so there is no `docker:up` counterpart and nothing runs between checks. `docker:down` only cleans up containers and networks left behind by an interrupted or failed run.
 
-```bash
-composer down
-# equivalent: docker compose down
-```
-
-There is no `docker:up` counterpart. All containers are run with `--rm` and are removed automatically when a check finishes, so there is no persistent "up" state. Nothing runs between checks — the only footprint between runs is disk space used by the stored images and volumes. `docker:down` is only needed to clean up residual containers and networks left behind by an interrupted or failed run.
-
-Both images and named volumes (`vendor/` per PHP version) are preserved by `docker:down`, so you can resume work with `composer 83` directly — no rebuild required. To remove volumes as well, run `docker compose down --volumes` directly (the next run will reinstall dependencies).
-
----
-
-## Testing locally (host PHP)
-
-If your host PHP satisfies `^8.3`, you can run checks directly:
-
-```bash
-composer install
-composer fast     # tests + static analysis
-composer test     # tests only
-composer static   # static analysis only
-composer fix-all  # apply Rector and PHPCBF fixes
-```
-
-See `composer list` for all available scripts and their aliases.
+Images and the per-version `vendor/` volumes are preserved by `docker:down`, so you can resume without rebuilding. To remove the volumes as well, run `docker compose down --volumes` directly; the next run reinstalls dependencies.
 
 ---
 
