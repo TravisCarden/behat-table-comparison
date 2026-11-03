@@ -13,4 +13,4 @@ RUN chmod +x /entrypoint.sh
 WORKDIR /app
 
 ENTRYPOINT ["/entrypoint.sh"]
-CMD ["composer", "check:fast"]
+CMD ["php", "./vendor/bin/phpunit"]

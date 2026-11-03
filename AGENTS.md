@@ -36,16 +36,18 @@ Prefer this command after non-trivial edits to validate across all supported PHP
 
 - `composer check:all`
 
-Use local (single-version) checks for rapid iteration:
+Use these for rapid iteration (they run on PHP 8.3 only):
 
-- `composer check:test`
-- `composer check:static`
 - `composer check:fast`
+- `composer check:static`
 
 Use targeted checks only when narrowing scope for speed:
 
+- `composer check:test`
 - `composer check:phpunit`
 - `composer check:behat`
+
+Run Composer scripts on the host; they invoke Docker themselves and fail inside a container.
 
 If running a narrower check for speed, state what was not run.
 
