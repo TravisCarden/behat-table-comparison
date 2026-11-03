@@ -34,7 +34,7 @@ This document provides agent-agnostic guidance for all automation, AI, and code 
 
 Prefer this command after non-trivial edits to validate across all supported PHP versions:
 
-- `composer docker:check-fast-all`
+- `composer check:all`
 
 Use local (single-version) checks for rapid iteration:
 
@@ -57,16 +57,11 @@ If running a narrower check for speed, state what was not run.
 
 ## Agent Guidance: Git Paging
 
-When generating or running Git commands, always append `| cat` or use `--no-pager` (e.g., `git --no-pager diff ...` or `git diff ... | cat`).
-This ensures output is never sent to a pager, regardless of user shell or Git config, and prevents issues in Zsh or CI environments where paged output can break automation or agent workflows.
-
-Do not rely on user or environment configuration to disable paging—always specify it explicitly in agent-generated commands.
+When running Git commands, always append `| cat` or use `--no-pager` (e.g., `git --no-pager diff ...`). Do not rely on user or environment configuration to disable paging; paged output can break automation.
 
 ## Agent/Skill Routing and Scope
 
-- Use this document as the canonical reference for all agent-agnostic automation, validation, and review policy.
-- Skill and instruction files should reference this document for validation and review policy, and only override for skill-specific or agent-specific needs.
-- If in doubt, defer to `AGENTS.md` for project-wide policy.
+- This document is the canonical reference for agent-agnostic automation, validation, and review policy. Skill and instruction files should defer to it and override it only for skill-specific or agent-specific needs.
 
 ## Commit Policy
 

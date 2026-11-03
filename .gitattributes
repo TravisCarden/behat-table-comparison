@@ -1,3 +1,4 @@
+/.agents/             export-ignore
 /.github/             export-ignore
 /.idea/               export-ignore
 /docker/              export-ignore
