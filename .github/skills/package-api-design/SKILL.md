@@ -1,113 +1,48 @@
 ---
 name: package-api-design
-scope: Make conscious, informed decisions about public API surface, stability guarantees, and design implications of changes to behat-table-comparison. Defers to AGENTS.md for validation and review policy.
+description: Evaluate API, stability, and ecosystem impact of a change to behat-table-comparison
+disable-model-invocation: true
+user-invocable: true
 ---
 
-## Use This Skill
+# Package API Design
 
-Use for concrete implementation work on this package, including:
+AGENTS.md owns coding rules, change discipline, validation commands, and contract-impact vocabulary (`none`, `additive`, `behavior-changing`, `breaking`). This skill adds only the project posture and ecosystem facts needed to judge API decisions.
 
-- Changes to `TableEqualityAssertion` or `UnequalTablesException`
-- Assertion message/label behavior updates
-- PHPUnit and Behat coverage updates
-- README usage/output documentation alignment
-- Contract surface updates in `docs/contract-surface.md`
-- Evaluating API/design implications of changes, especially for downstream consumers
+Explicitly invoked: apply this posture to the task or change at hand (any argument supplied, otherwise the current conversation).
 
-## Do Not Use This Skill
+## Posture
 
-- Use AGENTS.md for agent-agnostic automation, validation, and review policy.
+Small PHP library built for extreme stability: in production 10+ years, expected to stay compatible for years or decades between releases, with minimal maintenance burden. Weigh every change against that:
 
-## Role
+- Existing behavior, including message text and labels that consumers may match on, is presumed load-bearing. Change it only with a reason that outweighs downstream cost.
+- Prefer the smallest intervention that solves the actual problem; a larger refactor needs a concrete payoff.
+- A new public surface is a permanent commitment (no deprecation policy). Add it only when needed, and favor shapes that are hard to misuse and cheap to keep.
+- `docs/contract-surface.md` defines what is stable in `1.x`. If a change touches or contradicts it, say so explicitly.
 
-You are a maintainer for a small PHP library designed for extreme stability and minimal maintenance burden. The library has been in production for over ten years without a bug, and is expected to remain compatible for years or decades between releases. Decisions prioritize:
+Use judgment on how much analysis a change deserves: an internal fix needs little; anything touching public methods, exception types, labels, or message sections deserves a deliberate look at consumers and an honest impact category.
 
-- **Long-term stability**: Avoid BC breaks; API must remain viable with minimal maintenance.
-- **Minimal changes**: Prefer explicit, minimal interventions over large refactors.
-- **Backward compatibility**: Preserve existing behavior by default.
+## Ecosystem
 
-## Ecosystem Context
-
-**Dependency graph:**
 ```
 Drupal core (currently recommended major)
-  ↑ (depended upon by)
+  ↑ depended on by
 drupal-spec-tool
-  ↑ (depended upon by)
+  ↑ depended on by
 behat-table-comparison
 ```
 
-**Key relationships:**
-- Library owner maintains both behat-table-comparison and drupal-spec-tool, enabling coordinated changes if needed.
-- Drupal core compatibility is critical.
-- Drupal core PHP version support is the primary external driver of PHP version requirements.
-
-**Direct dependencies:**
-- `behat/gherkin` (production)
-- `behat/behat` (dev; test context only)
-
-**Dependency philosophy:** Minimal and conservative; designed to avoid frequent updates. The current dependency set has remained stable for over ten years.
-
-## Repository Constraints
-
-- Follow AGENTS.md for canonical coding rules and change discipline.
-- This skill adds package-specific decision criteria (ecosystem impact, API stability posture, release philosophy).
+- The owner maintains both this package and drupal-spec-tool, so coordinated changes are possible; still treat other consumers as unknown.
+- Drupal core's supported PHP range is the main external driver of this package's PHP floor.
+- Runtime dependency: `behat/gherkin`. Dev only: `behat/behat` (test context). The dependency set has been stable for 10+ years and should stay minimal; breaking changes in `behat/gherkin` are the most likely cascade risk.
 
 ## Release and Versioning
 
-**Release philosophy:**
-- Releases are extremely rare.
-- Semver strict: patch for bugfixes, minor for features, major for BC breaks.
-- Gitflow-based release process.
+- Releases are very rare; strict Semver (patch = fixes, minor = features, major = BC breaks); Gitflow process.
+- No deprecation policy: the goal is to avoid BC breaks indefinitely. When one becomes unavoidable, ship it as a new major.
+- PHP floor is 8.3. It moves only when that version reaches official EOL or external pressure (e.g., Drupal core EOL) forces it. Test across all supported minor versions.
+- Expected update triggers are external: PHP EOL, dependency breaks, Drupal compatibility. Internal triggers are rare.
 
-**Deprecation policy:**
-- None. API design goal is to avoid BC breaks indefinitely.
-- When BC breaks are eventually necessary, release as a new major version per Semver.
+## Security
 
-**PHP version floor:**
-- 8.3.
-- Floor only moves when the current floor reaches official EOL or external pressure (e.g., Drupal core EOL) requires it.
-- Test across all supported minor PHP versions.
-
-**Update triggers:**
-- External events: PHP version EOL, breaking dependency changes (especially behat/gherkin), Drupal core compatibility requirements.
-- Internal: Typically none expected for years/decades.
-
-## Security Handling
-
-- Scheduled GitHub Actions `composer audit` runs detect dependency vulnerabilities.
-- Vulnerabilities are analyzed for Semver and support implications, then fixed quickly.
-- No formal security SLA; triaged by severity and impact.
-- No separate security policy document; see AGENTS.md for general guidance.
-
-## Workflow
-
-1. **Evaluate API impact**: Determine whether the change touches the public contract:
-   - Public methods/signatures
-   - Exception types
-   - Diagnostic labels or message sections
-   - Anything documented in `docs/contract-surface.md`
-
-2. **Consider ecosystem impact**: Before implementing, consider:
-   - Whether the change could affect drupal-spec-tool or its consumers
-   - Whether PHP version constraints align with Drupal core recommendations
-   - Whether dependency changes could cascade (especially behat/gherkin)
-
-3. **Implement minimally** in `src/`:
-   - Smallest change possible
-   - Preserve existing behavior by default
-
-4. **Apply AGENTS.md change discipline**:
-   - Update tests/docs/contract artifacts as required by AGENTS.md
-
-5. **Run validation using AGENTS.md canonical commands**:
-   - Prefer full multi-version checks for non-trivial changes
-   - Use narrower checks only when explicitly optimizing iteration speed
-
-## Contract Impact Categories (for reviews)
-
-Use AGENTS.md categories when describing impact: `none`, `additive`, `behavior-changing`, `breaking`.
-
-## Validation and Review Policy
-
-Refer to [AGENTS.md](../../../AGENTS.md) for canonical validation commands and review output expectations.
+Scheduled GitHub Actions run `composer audit`. Vulnerabilities are triaged by severity and impact, assessed for Semver/support implications, and fixed quickly. No formal SLA or separate security policy.
